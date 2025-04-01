@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Consulta Pediátrica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f8f9fa;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+        }
+
+        .card-evaluation {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            padding: 1.2rem;
+        }
+
+        .step {
+            display: none;
+            padding: 2rem;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .progress {
+            height: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-custom:hover {
+            background-color: #3b7ecc;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .risk-indicator {
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            background: linear-gradient(to right, var(--success-color), var(--warning-color), var(--danger-color));
+            position: relative;
+        }
+
+        .risk-marker {
+            position: absolute;
+            top: -15px;
+            width: 2px;
+            height: 20px;
+            background-color: black;
+            transform: translateX(-50%);
+        }
+
+        .risk-label {
+            position: absolute;
+            top: 10px;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        .result-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .risk-badge {
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .risk-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .risk-moderate {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .risk-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .recommendation-card {
+            border-left: 4px solid var(--primary-color);
+            background-color: #f0f8f7;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .factor-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .factor-name {
+            font-weight: 500;
+        }
+
+        .factor-value {
+            font-weight: 600;
+        }
+
+        .factor-excellent {
+            color: var(--success-color);
+        }
+
+        .factor-good {
+            color: #5bc0de;
+        }
+
+        .factor-fair {
+            color: var(--warning-color);
+        }
+
+        .factor-poor {
+            color: var(--danger-color);
+        }
+
+        .floating-home-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .floating-home-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="card card-evaluation">
+            <div class="card-header text-center">
+                <h3>Pre-Consulta Pediátrica</h3>
+                <p class="mb-0">Evaluación Inicial de Pacientes Pediátricos</p>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="progressBar"></div>
+            </div>
+            <form id="preConsultaForm">
+                <!-- Paso 1: Datos Personales -->
+                <div class="step active" id="step1">
+                    <h4 class="mb-4"><i class="fas fa-user factor-icon"></i>Datos Personales</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre completo del niño/a</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edad" name="edad" min="0" max="18" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" name="sexo" required>
+                                <option value="">Seleccione...</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="fecha" class="form-label">Fecha de pre-consulta</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary disabled">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(1, 2)">Siguiente</button>
+                    </div>
+                </div>
+                <!-- Paso 2: Antecedentes Médicos -->
+                <div class="step" id="step2">
+                    <h4 class="mb-4"><i class="fas fa-notes-medical factor-icon"></i>Antecedentes Médicos</h4>
+                    <div class="mb-3">
+                        <label class="form-label">¿Tiene algún diagnóstico médico previo?</label>
+                        <select class="form-select" name="diagnostico_previo" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha sido hospitalizado alguna vez?</label>
+                        <select class="form-select" name="hospitalizacion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Toma algún medicamento regularmente?</label>
+                        <select class="form-select" name="medicacion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                        <div class="mt-2 d-none" id="medicamentos-detalle">
+                            <label class="form-label">Especifique los medicamentos:</label>
+                            <textarea class="form-control" rows="3" name="medicamentos_detalle"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(2, 1)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(2, 3)">Siguiente</button>
+                    </div>
+                </div>
+                <!-- Paso 3: Desarrollo Infantil -->
+                <div class="step" id="step3">
+                    <h4 class="mb-4"><i class="fas fa-child factor-icon"></i>Desarrollo Infantil</h4>
+                    <div class="mb-3">
+                        <label class="form-label">¿Gateó a tiempo (aproximadamente a los 9 meses)?</label>
+                        <select class="form-select" name="gateo" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Caminó a tiempo (aproximadamente a los 12 meses)?</label>
+                        <select class="form-select" name="caminata" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Habla frases completas apropiadas para su edad?</label>
+                        <select class="form-select" name="habla" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(3, 2)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(3, 4)">Siguiente</button>
+                    </div>
+                </div>
+                <!-- Paso 4: Hábitos y Estilo de Vida -->
+                <div class="step" id="step4">
+                    <h4 class="mb-4"><i class="fas fa-heartbeat factor-icon"></i>Hábitos y Estilo de Vida</h4>
+                    <div class="mb-3">
+                        <label class="form-label">¿Qué tan activo es el niño/a? (Juegos, deportes, etc.)</label>
+                        <select class="form-select" name="actividad_fisica" required>
+                            <option value="">Seleccione...</option>
+                            <option value="baja">Baja actividad</option>
+                            <option value="moderada">Moderada actividad</option>
+                            <option value="alta">Alta actividad</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Duerme lo suficiente para su edad?</label>
+                        <select class="form-select" name="sueno" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Tiene hábitos alimenticios saludables?</label>
+                        <select class="form-select" name="alimentacion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(4, 3)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="calculatePediatricRisk()">Calcular
+                            Resultados</button>
+                    </div>
+                </div>
+                <!-- Paso 5: Resultados -->
+                <div class="step" id="step5">
+                    <h4 class="mb-4 text-center">Resultados de la Pre-Consulta Pediátrica</h4>
+                    <div class="result-card">
+                        <h5 class="result-title">Resumen de Factores Evaluados</h5>
+                        <div class="factor-score">
+                            <span class="factor-name">1. Antecedentes Médicos</span>
+                            <span class="factor-value" id="result-antecedentes">-</span>
+                        </div>
+                        <div class="factor-score">
+                            <span class="factor-name">2. Desarrollo Infantil</span>
+                            <span class="factor-value" id="result-desarrollo">-</span>
+                        </div>
+                        <div class="factor-score">
+                            <span class="factor-name">3. Hábitos y Estilo de Vida</span>
+                            <span class="factor-value" id="result-habitos">-</span>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h5 class="result-title">Puntuación General</h5>
+                        <div class="text-center mb-3">
+                            <h2 id="puntuacion-total">-</h2>
+                            <span class="risk-badge" id="riesgo-categoria">-</span>
+                        </div>
+                        <div class="risk-indicator">
+                            <div class="risk-marker" style="left: 10%;"></div>
+                            <div class="risk-marker" style="left: 30%;"></div>
+                            <div class="risk-marker" style="left: 70%;"></div>
+                            <div class="risk-marker" style="left: 90%;"></div>
+                            <div class="risk-label" style="left: 10%;">Bajo</div>
+                            <div class="risk-label" style="left: 30%;">Moderado</div>
+                            <div class="risk-label" style="left: 70%;">Alto</div>
+                            <div class="risk-label" style="left: 90%;">Muy alto</div>
+                            <div class="risk-marker" id="risk-pointer"
+                                style="left: 50%; background-color: var(--primary-color); width: 4px; height: 25px; top: -20px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h5 class="result-title">Recomendaciones Personalizadas</h5>
+                        <div id="recommendations-container">
+                            <!-- Las recomendaciones se generarán aquí -->
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(5, 4)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimir Resultados
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Botón flotante para volver al index -->
+    <a href="index.html" class="floating-home-btn">
+        <i class="fas fa-home"></i>
+    </a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Variables globales
+        let formData = {};
+        const totalSteps = 5;
+
+        // Funciones de navegación entre pasos (reutiliza las mismas funciones del archivo original)
+        function nextStep(current, next) {
+            const currentStepElement = document.getElementById(`step${current}`);
+            const requiredInputs = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+            requiredInputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos requeridos',
+                    text: 'Por favor complete todos los campos obligatorios antes de continuar.',
+                    confirmButtonColor: '#4a90e2'
+                });
+                return;
+            }
+            saveStepData(current);
+            updateProgress(next);
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${next}`).classList.add('active');
+
+            // Mostrar detalles de medicamentos si aplica
+            if (formData.medicacion === 'si' && next === 3) {
+                document.getElementById('medicamentos-detalle').classList.remove('d-none');
+            } else {
+                document.getElementById('medicamentos-detalle').classList.add('d-none');
+            }
+        }
+
+        function prevStep(current, prev) {
+            saveStepData(current);
+            updateProgress(prev);
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${prev}`).classList.add('active');
+        }
+
+        function updateProgress(step) {
+            const progressPercentage = (step / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        }
+
+        function saveStepData(step) {
+            const stepElement = document.getElementById(`step${step}`);
+            const inputs = stepElement.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                formData[input.name] = input.value;
+            });
+        }
+
+        // Función para calcular riesgos
+        function calculatePediatricRisk() {
+            saveStepData(4);
+
+            const antecedentesScore = calculateMedicalHistoryScore();
+            const desarrolloScore = calculateDevelopmentScore();
+            const habitosScore = calculateLifestyleScore();
+
+            const totalScore = Math.round((antecedentesScore + desarrolloScore + habitosScore) / 3);
+
+            showResults(antecedentesScore, desarrolloScore, habitosScore, totalScore);
+            updateProgress(5);
+            document.getElementById(`step4`).classList.remove('active');
+            document.getElementById(`step5`).classList.add('active');
+        }
+
+        // Funciones de cálculo para cada factor
+        function calculateMedicalHistoryScore() {
+            let score = 0;
+            if (formData.diagnostico_previo === 'no') score += 100;
+            else score += 50;
+
+            if (formData.hospitalizacion === 'no') score += 100;
+            else score += 50;
+
+            if (formData.medicacion === 'no') score += 100;
+            else score += 50;
+
+            return Math.round(score / 3);
+        }
+
+        function calculateDevelopmentScore() {
+            let score = 0;
+            if (formData.gateo === 'si') score += 100;
+            else score += 50;
+
+            if (formData.caminata === 'si') score += 100;
+            else score += 50;
+
+            if (formData.habla === 'si') score += 100;
+            else score += 50;
+
+            return Math.round(score / 3);
+        }
+
+        function calculateLifestyleScore() {
+            let score = 0;
+            switch (formData.actividad_fisica) {
+                case 'alta': score += 100; break;
+                case 'moderada': score += 75; break;
+                case 'baja': score += 50; break;
+            }
+            if (formData.sueno === 'si') score += 100;
+            else score += 50;
+
+            if (formData.alimentacion === 'si') score += 100;
+            else score += 50;
+
+            return Math.round(score / 3);
+        }
+
+        // Mostrar resultados
+        function showResults(antecedentesScore, desarrolloScore, habitosScore, totalScore) {
+            document.getElementById('result-antecedentes').textContent = getScoreLabel(antecedentesScore);
+            document.getElementById('result-desarrollo').textContent = getScoreLabel(desarrolloScore);
+            document.getElementById('result-habitos').textContent = getScoreLabel(habitosScore);
+
+            document.getElementById('puntuacion-total').textContent = totalScore;
+
+            let riesgoCategoria = '';
+            if (totalScore >= 80) riesgoCategoria = 'Bajo';
+            else if (totalScore >= 60) riesgoCategoria = 'Moderado';
+            else if (totalScore >= 40) riesgoCategoria = 'Alto';
+            else riesgoCategoria = 'Muy alto';
+
+            const riesgoElement = document.getElementById('riesgo-categoria');
+            riesgoElement.textContent = riesgoCategoria;
+            if (totalScore >= 80) riesgoElement.classList.add('risk-low');
+            else if (totalScore >= 60) riesgoElement.classList.add('risk-moderate');
+            else if (totalScore >= 40) riesgoElement.classList.add('risk-high');
+
+            const riskPointer = document.getElementById('risk-pointer');
+            const position = (totalScore / 100) * 100;
+            riskPointer.style.left = `${position}%`;
+
+            generateRecommendations(totalScore);
+        }
+
+        function getScoreLabel(score) {
+            if (score >= 80) return `${score} - Excelente`;
+            if (score >= 60) return `${score} - Buena`;
+            if (score >= 40) return `${score} - Regular`;
+            return `${score} - Deficiente`;
+        }
+
+        function generateRecommendations(totalScore) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            recommendationsContainer.innerHTML = '';
+
+            if (totalScore >= 80) {
+                addRecommendation('El desarrollo del niño/a es normal. Continúe promoviendo hábitos saludables.');
+            } else if (totalScore >= 60) {
+                addRecommendation('El niño/a presenta algunos factores de riesgo. Considere una consulta médica.');
+            } else if (totalScore >= 40) {
+                addRecommendation('El niño/a presenta factores de riesgo significativos. Busque atención médica especializada.');
+            } else {
+                addRecommendation('El niño/a requiere atención médica inmediata.');
+            }
+
+            if (formData.gateo === 'no' || formData.caminata === 'no' || formData.habla === 'no') {
+                addRecommendation('Consulte a un pediatra para evaluar posibles retrasos en el desarrollo.');
+            }
+            if (formData.actividad_fisica === 'baja') {
+                addRecommendation('Promueva actividades físicas diarias para mejorar la salud del niño/a.');
+            }
+            if (formData.sueno === 'no') {
+                addRecommendation('Establezca una rutina de sueño adecuada para la edad del niño/a.');
+            }
+        }
+
+        function addRecommendation(text) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            const recommendationCard = document.createElement('div');
+            recommendationCard.className = 'recommendation-card';
+            recommendationCard.innerHTML = `<p>${text}</p>`;
+            recommendationsContainer.appendChild(recommendationCard);
+        }
+    </script>
+</body>
+
+</html>

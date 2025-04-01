@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Cardiovascular - Life's Essential 8</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0f6f61;
+            --secondary-color: #f8f9fa;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+        }
+
+        .card-evaluation {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            padding: 1.2rem;
+        }
+
+        .step {
+            display: none;
+            padding: 2rem;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .progress {
+            height: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-custom:hover {
+            background-color: #0d5c50;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .risk-indicator {
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            background: linear-gradient(to right, var(--success-color), var(--warning-color), var(--danger-color));
+            position: relative;
+        }
+
+        .risk-marker {
+            position: absolute;
+            top: -15px;
+            width: 2px;
+            height: 20px;
+            background-color: black;
+            transform: translateX(-50%);
+        }
+
+        .risk-label {
+            position: absolute;
+            top: 10px;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        .result-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .risk-badge {
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .risk-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .risk-moderate {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .risk-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .recommendation-card {
+            border-left: 4px solid var(--primary-color);
+            background-color: #f0f8f7;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .factor-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .factor-name {
+            font-weight: 500;
+        }
+
+        .factor-value {
+            font-weight: 600;
+        }
+
+        .factor-excellent {
+            color: var(--success-color);
+        }
+
+        .factor-good {
+            color: #5bc0de;
+        }
+
+        .factor-fair {
+            color: var(--warning-color);
+        }
+
+        .factor-poor {
+            color: var(--danger-color);
+        }
+
+        .floating-home-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .floating-home-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .floating-home-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .floating-home-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="card card-evaluation">
+            <div class="card-header text-center">
+                <h3>Evaluación Cardiovascular - Life's Essential 8</h3>
+                <p class="mb-0">American Heart Association</p>
+            </div>
+
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="progressBar"></div>
+            </div>
+
+            <form id="evaluationForm">
+                <!-- Paso 1: Datos Personales -->
+                <div class="step active" id="step1">
+                    <h4 class="mb-4"><i class="fas fa-user factor-icon"></i>Datos Personales</h4>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre completo</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edad" name="edad" min="18" max="120" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" name="sexo" required>
+                                <option value="">Seleccione...</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="fecha" class="form-label">Fecha de evaluación</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary disabled">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(1, 2)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Dieta -->
+                <div class="step" id="step2">
+                    <h4 class="mb-4"><i class="fas fa-utensils factor-icon"></i>1. Dieta Saludable</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label">Frecuencia de consumo de frutas y verduras</label>
+                        <select class="form-select" name="dieta_frutas_verduras" required>
+                            <option value="">Seleccione...</option>
+                            <option value="5">5 o más porciones al día</option>
+                            <option value="3-4">3-4 porciones al día</option>
+                            <option value="1-2">1-2 porciones al día</option>
+                            <option value="0">Menos de 1 porción al día</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Consumo de granos integrales</label>
+                        <select class="form-select" name="dieta_granos" required>
+                            <option value="">Seleccione...</option>
+                            <option value="3">3 o más porciones al día</option>
+                            <option value="1-2">1-2 porciones al día</option>
+                            <option value="0">Menos de 1 porción al día</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Consumo de alimentos procesados y azúcares añadidos</label>
+                        <select class="form-select" name="dieta_procesados" required>
+                            <option value="">Seleccione...</option>
+                            <option value="0">Nunca o rara vez</option>
+                            <option value="1">1-2 veces por semana</option>
+                            <option value="2">3-4 veces por semana</option>
+                            <option value="3">Diariamente</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(2, 1)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(2, 3)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Actividad Física -->
+                <div class="step" id="step3">
+                    <h4 class="mb-4"><i class="fas fa-running factor-icon"></i>2. Actividad Física</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label">Minutos de actividad física moderada por semana</label>
+                        <select class="form-select" name="actividad_minutos" required>
+                            <option value="">Seleccione...</option>
+                            <option value="150">150 minutos o más</option>
+                            <option value="75-150">75-150 minutos</option>
+                            <option value="30-75">30-75 minutos</option>
+                            <option value="0-30">Menos de 30 minutos</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Intensidad de la actividad física</label>
+                        <select class="form-select" name="actividad_intensidad" required>
+                            <option value="">Seleccione...</option>
+                            <option value="alta">Alta intensidad (ejercicio vigoroso)</option>
+                            <option value="moderada">Moderada intensidad</option>
+                            <option value="baja">Baja intensidad</option>
+                            <option value="ninguna">Ninguna actividad</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Actividades de fortalecimiento muscular</label>
+                        <select class="form-select" name="actividad_muscular" required>
+                            <option value="">Seleccione...</option>
+                            <option value="2">2 o más veces por semana</option>
+                            <option value="1">1 vez por semana</option>
+                            <option value="0">Menos de 1 vez por semana</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(3, 2)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(3, 4)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 4: Exposición a Nicotina -->
+                <div class="step" id="step4">
+                    <h4 class="mb-4"><i class="fas fa-smoking-ban factor-icon"></i>3. Exposición a Nicotina</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label">¿Fuma actualmente?</label>
+                        <select class="form-select" name="tabaco_fuma" id="tabaco_fuma" required
+                            onchange="toggleTabacoFields()">
+                            <option value="">Seleccione...</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                            <option value="exfumador">Ex-fumador</option>
+                        </select>
+                    </div>
+
+                    <div class="row" id="tabaco_fields" style="display: none;">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Años fumando</label>
+                            <input type="number" class="form-control" name="tabaco_anos" min="0" max="100">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cigarrillos por día</label>
+                            <input type="number" class="form-control" name="tabaco_cantidad" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Exposición al humo de segunda mano</label>
+                        <select class="form-select" name="tabaco_exposicion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasional">Ocasionalmente</option>
+                            <option value="frecuente">Frecuentemente</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(4, 3)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(4, 5)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 5: Sueño -->
+                <div class="step" id="step5">
+                    <h4 class="mb-4"><i class="fas fa-bed factor-icon"></i>4. Sueño Saludable</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label">Horas de sueño por noche</label>
+                        <select class="form-select" name="sueño_horas" required>
+                            <option value="">Seleccione...</option>
+                            <option value="7-9">7-9 horas (óptimo)</option>
+                            <option value="6-7">6-7 horas</option>
+                            <option value="5-6">5-6 horas</option>
+                            <option value="menos5">Menos de 5 horas</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Calidad del sueño</label>
+                        <select class="form-select" name="sueño_calidad" required>
+                            <option value="">Seleccione...</option>
+                            <option value="excelente">Excelente (me despierto descansado)</option>
+                            <option value="buena">Buena</option>
+                            <option value="regular">Regular</option>
+                            <option value="mala">Mala (me despierto cansado)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha sido diagnosticado con apnea del sueño?</label>
+                        <select class="form-select" name="sueño_apnea" required>
+                            <option value="">Seleccione...</option>
+                            <option value="no">No</option>
+                            <option value="si">Sí</option>
+                            <option value="sospecha">Sospecha, no diagnosticado</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(5, 4)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(5, 6)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 6: IMC -->
+                <div class="step" id="step6">
+                    <h4 class="mb-4"><i class="fas fa-weight factor-icon"></i>5. Índice de Masa Corporal (IMC)</h4>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="peso" class="form-label">Peso (kg)</label>
+                            <input type="number" class="form-control" id="peso" name="peso" min="30" max="300"
+                                step="0.1" required onchange="calcularIMC()">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="altura" class="form-label">Altura (cm)</label>
+                            <input type="number" class="form-control" id="altura" name="altura" min="100" max="250"
+                                required onchange="calcularIMC()">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="imc" class="form-label">IMC (calculado automáticamente)</label>
+                        <input type="text" class="form-control" id="imc" name="imc" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Circunferencia de cintura (cm)</label>
+                        <input type="number" class="form-control" name="cintura" min="50" max="200" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(6, 5)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(6, 7)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 7: Lípidos -->
+                <div class="step" id="step7">
+                    <h4 class="mb-4"><i class="fas fa-tint factor-icon"></i>6. Niveles de Lípidos</h4>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Colesterol total (mg/dL)</label>
+                            <input type="number" class="form-control" name="colesterol_total" min="100" max="400"
+                                required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">HDL (mg/dL)</label>
+                            <input type="number" class="form-control" name="hdl" min="20" max="100" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">LDL (mg/dL)</label>
+                            <input type="number" class="form-control" name="ldl" min="20" max="300" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Triglicéridos (mg/dL)</label>
+                            <input type="number" class="form-control" name="trigliceridos" min="50" max="1000" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(7, 6)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(7, 8)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 8: Glucosa -->
+                <div class="step" id="step8">
+                    <h4 class="mb-4"><i class="fas fa-syringe factor-icon"></i>7. Glucosa en Sangre</h4>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Glucosa en ayunas (mg/dL)</label>
+                            <input type="number" class="form-control" name="glucosa_ayunas" min="50" max="300" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Hemoglobina glicosilada (HbA1c, %)</label>
+                            <input type="number" class="form-control" name="hba1c" min="4" max="15" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha sido diagnosticado con diabetes o prediabetes?</label>
+                        <select class="form-select" name="diabetes" required>
+                            <option value="">Seleccione...</option>
+                            <option value="no">No</option>
+                            <option value="prediabetes">Prediabetes</option>
+                            <option value="diabetes">Diabetes</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(8, 7)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(8, 9)">Siguiente</button>
+                    </div>
+                </div>
+
+                <!-- Paso 9: Presión Arterial -->
+                <div class="step" id="step9">
+                    <h4 class="mb-4"><i class="fas fa-heartbeat factor-icon"></i>8. Presión Arterial</h4>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Presión arterial sistólica (mmHg)</label>
+                            <input type="number" class="form-control" name="presion_sistolica" min="70" max="200"
+                                required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Presión arterial diastólica (mmHg)</label>
+                            <input type="number" class="form-control" name="presion_diastolica" min="40" max="120"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha sido diagnosticado con hipertensión?</label>
+                        <select class="form-select" name="hipertension" required>
+                            <option value="">Seleccione...</option>
+                            <option value="no">No</option>
+                            <option value="si">Sí</option>
+                            <option value="borderline">Valores límite</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">¿Toma medicación para la presión arterial?</label>
+                        <select class="form-select" name="medicacion_hipertension" required>
+                            <option value="">Seleccione...</option>
+                            <option value="no">No</option>
+                            <option value="si">Sí</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(9, 8)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="calculateRisk()">Calcular Riesgo</button>
+                    </div>
+                </div>
+
+                <!-- Paso 10: Resultados -->
+                <div class="step" id="step10">
+                    <h4 class="mb-4 text-center">Resultados de la Evaluación Cardiovascular</h4>
+
+                    <div class="result-card">
+                        <h5 class="result-title">Resumen de Factores de Riesgo</h5>
+
+                        <div class="factor-score">
+                            <span class="factor-name">1. Dieta Saludable</span>
+                            <span class="factor-value" id="result-dieta">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">2. Actividad Física</span>
+                            <span class="factor-value" id="result-actividad">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">3. Exposición a Nicotina</span>
+                            <span class="factor-value" id="result-nicotina">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">4. Sueño Saludable</span>
+                            <span class="factor-value" id="result-sueño">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">5. Índice de Masa Corporal</span>
+                            <span class="factor-value" id="result-imc">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">6. Niveles de Lípidos</span>
+                            <span class="factor-value" id="result-lipidos">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">7. Glucosa en Sangre</span>
+                            <span class="factor-value" id="result-glucosa">-</span>
+                        </div>
+
+                        <div class="factor-score">
+                            <span class="factor-name">8. Presión Arterial</span>
+                            <span class="factor-value" id="result-presion">-</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h5 class="result-title">Puntuación General</h5>
+                        <div class="text-center mb-3">
+                            <h2 id="puntuacion-total">-</h2>
+                            <span class="risk-badge" id="riesgo-categoria">-</span>
+                        </div>
+
+                        <div class="risk-indicator">
+                            <div class="risk-marker" style="left: 10%;"></div>
+                            <div class="risk-marker" style="left: 30%;"></div>
+                            <div class="risk-marker" style="left: 70%;"></div>
+                            <div class="risk-marker" style="left: 90%;"></div>
+
+                            <div class="risk-label" style="left: 10%;">Bajo</div>
+                            <div class="risk-label" style="left: 30%;">Moderado</div>
+                            <div class="risk-label" style="left: 70%;">Alto</div>
+                            <div class="risk-label" style="left: 90%;">Muy alto</div>
+
+                            <div class="risk-marker" id="risk-pointer"
+                                style="left: 50%; background-color: var(--primary-color); width: 4px; height: 25px; top: -20px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h5 class="result-title">Recomendaciones Personalizadas</h5>
+                        <div id="recommendations-container">
+                            <!-- Las recomendaciones se generarán aquí -->
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(10, 9)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimir Resultados
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Botón flotante para volver al index -->
+    <a href="index.html" class="floating-home-btn">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Variables globales
+        let formData = {};
+        const totalSteps = 10;
+
+        // Función para avanzar al siguiente paso
+        function nextStep(current, next) {
+            // Validar campos requeridos
+            const currentStepElement = document.getElementById(`step${current}`);
+            const requiredInputs = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredInputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos requeridos',
+                    text: 'Por favor complete todos los campos obligatorios antes de continuar.',
+                    confirmButtonColor: '#0f6f61'
+                });
+                return;
+            }
+
+            // Guardar datos del paso actual
+            saveStepData(current);
+
+            // Actualizar progreso
+            updateProgress(next);
+
+            // Cambiar de paso
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${next}`).classList.add('active');
+        }
+
+        // Función para retroceder al paso anterior
+        function prevStep(current, prev) {
+            // Guardar datos del paso actual
+            saveStepData(current);
+
+            // Actualizar progreso
+            updateProgress(prev);
+
+            // Cambiar de paso
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${prev}`).classList.add('active');
+        }
+
+        // Función para actualizar la barra de progreso
+        function updateProgress(step) {
+            const progressPercentage = (step / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        }
+
+        // Función para guardar datos del paso actual
+        function saveStepData(step) {
+            const stepElement = document.getElementById(`step${step}`);
+            const inputs = stepElement.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                formData[input.name] = input.value;
+            });
+        }
+
+        // Función para calcular IMC
+        function calcularIMC() {
+            const peso = parseFloat(document.getElementById('peso').value);
+            const altura = parseFloat(document.getElementById('altura').value) / 100; // Convertir cm a m
+
+            if (peso && altura) {
+                const imc = (peso / (altura * altura)).toFixed(1);
+                document.getElementById('imc').value = imc;
+            }
+        }
+
+        // Función para mostrar/ocultar campos de tabaco
+        function toggleTabacoFields() {
+            const fuma = document.getElementById('tabaco_fuma').value;
+            const tabacoFields = document.getElementById('tabaco_fields');
+
+            if (fuma === 'si') {
+                tabacoFields.style.display = 'flex';
+            } else {
+                tabacoFields.style.display = 'none';
+            }
+        }
+
+        // Función para calcular el riesgo cardiovascular
+        function calculateRisk() {
+            // Guardar datos del último paso
+            saveStepData(9);
+
+            // Calcular puntuaciones individuales
+            const dietaScore = calculateDietScore();
+            const actividadScore = calculateActivityScore();
+            const nicotinaScore = calculateNicotineScore();
+            const sueñoScore = calculateSleepScore();
+            const imcScore = calculateIMCScore();
+            const lipidosScore = calculateLipidsScore();
+            const glucosaScore = calculateGlucoseScore();
+            const presionScore = calculatePressureScore();
+
+            // Calcular puntuación total (0-100)
+            const totalScore = Math.round((
+                dietaScore + actividadScore + nicotinaScore + sueñoScore +
+                imcScore + lipidosScore + glucosaScore + presionScore
+            ) / 8);
+
+            // Mostrar resultados
+            showResults(
+                dietaScore, actividadScore, nicotinaScore, sueñoScore,
+                imcScore, lipidosScore, glucosaScore, presionScore,
+                totalScore
+            );
+
+            // Ir al paso de resultados
+            updateProgress(10);
+            document.getElementById(`step9`).classList.remove('active');
+            document.getElementById(`step10`).classList.add('active');
+        }
+
+        // Funciones de cálculo para cada factor (simplificadas)
+        function calculateDietScore() {
+            // Lógica de cálculo basada en las respuestas
+            let score = 0;
+
+            // Frutas y verduras
+            switch (formData.dieta_frutas_verduras) {
+                case '5': score += 100; break;
+                case '3-4': score += 75; break;
+                case '1-2': score += 50; break;
+                case '0': score += 25; break;
+            }
+
+            // Granos integrales
+            switch (formData.dieta_granos) {
+                case '3': score += 100; break;
+                case '1-2': score += 75; break;
+                case '0': score += 25; break;
+            }
+
+            // Alimentos procesados
+            switch (formData.dieta_procesados) {
+                case '0': score += 100; break;
+                case '1': score += 75; break;
+                case '2': score += 50; break;
+                case '3': score += 25; break;
+            }
+
+            return Math.round(score / 3);
+        }
+
+        function calculateActivityScore() {
+            let score = 0;
+
+            // Minutos de actividad
+            switch (formData.actividad_minutos) {
+                case '150': score += 100; break;
+                case '75-150': score += 75; break;
+                case '30-75': score += 50; break;
+                case '0-30': score += 25; break;
+            }
+
+            // Intensidad
+            switch (formData.actividad_intensidad) {
+                case 'alta': score += 100; break;
+                case 'moderada': score += 75; break;
+                case 'baja': score += 50; break;
+                case 'ninguna': score
+
+
+                case 'ninguna': score += 25; break;
+            }
+            // Actividad muscular
+            switch (formData.actividad_muscular) {
+                case '2': score += 100; break;
+                case '1': score += 75; break;
+                case '0': score += 25; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        function calculateNicotineScore() {
+            let score = 0;
+            // Fumar actualmente
+            switch (formData.tabaco_fuma) {
+                case 'si': score += 25; break;
+                case 'no': score += 100; break;
+                case 'exfumador': score += 75; break;
+            }
+            // Exposición a humo de segunda mano
+            switch (formData.tabaco_exposicion) {
+                case 'nunca': score += 100; break;
+                case 'ocasional': score += 75; break;
+                case 'frecuente': score += 50; break;
+            }
+            return Math.round(score / 2);
+        }
+
+        function calculateSleepScore() {
+            let score = 0;
+            // Horas de sueño
+            switch (formData.sueño_horas) {
+                case '7-9': score += 100; break;
+                case '6-7': score += 75; break;
+                case '5-6': score += 50; break;
+                case 'menos5': score += 25; break;
+            }
+            // Calidad del sueño
+            switch (formData.sueño_calidad) {
+                case 'excelente': score += 100; break;
+                case 'buena': score += 75; break;
+                case 'regular': score += 50; break;
+                case 'mala': score += 25; break;
+            }
+            // Apnea del sueño
+            switch (formData.sueño_apnea) {
+                case 'no': score += 100; break;
+                case 'si': score += 25; break;
+                case 'sospecha': score += 50; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        function calculateIMCScore() {
+            const imc = parseFloat(formData.imc);
+            if (imc < 18.5) return 50; // Bajo peso
+            if (imc >= 18.5 && imc <= 24.9) return 100; // Peso normal
+            if (imc >= 25 && imc <= 29.9) return 75; // Sobrepeso
+            if (imc >= 30) return 25; // Obesidad
+        }
+
+        function calculateLipidsScore() {
+            let score = 0;
+            // Colesterol total
+            const colesterolTotal = parseFloat(formData.colesterol_total);
+            if (colesterolTotal < 200) score += 100;
+            else if (colesterolTotal >= 200 && colesterolTotal <= 239) score += 75;
+            else score += 25;
+
+            // HDL
+            const hdl = parseFloat(formData.hdl);
+            if (hdl >= 60) score += 100;
+            else if (hdl >= 40 && hdl < 60) score += 75;
+            else score += 25;
+
+            // LDL
+            const ldl = parseFloat(formData.ldl);
+            if (ldl < 100) score += 100;
+            else if (ldl >= 100 && ldl <= 129) score += 75;
+            else score += 25;
+
+            // Triglicéridos
+            const trigliceridos = parseFloat(formData.trigliceridos);
+            if (trigliceridos < 150) score += 100;
+            else if (trigliceridos >= 150 && trigliceridos <= 199) score += 75;
+            else score += 25;
+
+            return Math.round(score / 4);
+        }
+
+        function calculateGlucoseScore() {
+            let score = 0;
+            // Glucosa en ayunas
+            const glucosaAyunas = parseFloat(formData.glucosa_ayunas);
+            if (glucosaAyunas < 100) score += 100;
+            else if (glucosaAyunas >= 100 && glucosaAyunas <= 125) score += 75;
+            else score += 25;
+
+            // HbA1c
+            const hba1c = parseFloat(formData.hba1c);
+            if (hba1c < 5.7) score += 100;
+            else if (hba1c >= 5.7 && hba1c <= 6.4) score += 75;
+            else score += 25;
+
+            // Diabetes
+            switch (formData.diabetes) {
+                case 'no': score += 100; break;
+                case 'prediabetes': score += 75; break;
+                case 'diabetes': score += 25; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        function calculatePressureScore() {
+            let score = 0;
+            // Presión sistólica
+            const sistolica = parseFloat(formData.presion_sistolica);
+            if (sistolica < 120) score += 100;
+            else if (sistolica >= 120 && sistolica <= 139) score += 75;
+            else score += 25;
+
+            // Presión diastólica
+            const diastolica = parseFloat(formData.presion_diastolica);
+            if (diastolica < 80) score += 100;
+            else if (diastolica >= 80 && diastolica <= 89) score += 75;
+            else score += 25;
+
+            // Hipertensión
+            switch (formData.hipertension) {
+                case 'no': score += 100; break;
+                case 'borderline': score += 75; break;
+                case 'si': score += 25; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        function showResults(dietaScore, actividadScore, nicotinaScore, sueñoScore,
+            imcScore, lipidosScore, glucosaScore, presionScore,
+            totalScore) {
+            // Mostrar puntuaciones individuales
+            document.getElementById('result-dieta').textContent = getScoreLabel(dietaScore);
+            document.getElementById('result-actividad').textContent = getScoreLabel(actividadScore);
+            document.getElementById('result-nicotina').textContent = getScoreLabel(nicotinaScore);
+            document.getElementById('result-sueño').textContent = getScoreLabel(sueñoScore);
+            document.getElementById('result-imc').textContent = getScoreLabel(imcScore);
+            document.getElementById('result-lipidos').textContent = getScoreLabel(lipidosScore);
+            document.getElementById('result-glucosa').textContent = getScoreLabel(glucosaScore);
+            document.getElementById('result-presion').textContent = getScoreLabel(presionScore);
+
+            // Mostrar puntuación total
+            document.getElementById('puntuacion-total').textContent = totalScore;
+
+            // Determinar categoría de riesgo
+            let riesgoCategoria = '';
+            if (totalScore >= 80) riesgoCategoria = 'Bajo';
+            else if (totalScore >= 60) riesgoCategoria = 'Moderado';
+            else if (totalScore >= 40) riesgoCategoria = 'Alto';
+            else riesgoCategoria = 'Muy alto';
+
+            // Mostrar categoría de riesgo
+            const riesgoElement = document.getElementById('riesgo-categoria');
+            riesgoElement.textContent = riesgoCategoria;
+            if (totalScore >= 80) riesgoElement.classList.add('risk-low');
+            else if (totalScore >= 60) riesgoElement.classList.add('risk-moderate');
+            else if (totalScore >= 40) riesgoElement.classList.add('risk-high');
+
+            // Posicionar indicador de riesgo
+            const riskPointer = document.getElementById('risk-pointer');
+            const position = (totalScore / 100) * 100;
+            riskPointer.style.left = `${position}%`;
+
+            // Generar recomendaciones personalizadas
+            generateRecommendations(totalScore);
+        }
+
+        function getScoreLabel(score) {
+            if (score >= 80) return `${score} - Excelente`;
+            if (score >= 60) return `${score} - Buena`;
+            if (score >= 40) return `${score} - Regular`;
+            return `${score} - Deficiente`;
+        }
+
+        function generateRecommendations(totalScore) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            recommendationsContainer.innerHTML = ''; // Limpiar contenido anterior
+
+            if (totalScore >= 80) {
+                addRecommendation('Su riesgo cardiovascular es bajo. Mantenga sus hábitos saludables.');
+            } else if (totalScore >= 60) {
+                addRecommendation('Su riesgo cardiovascular es moderado. Considere mejorar su dieta y actividad física.');
+            } else if (totalScore >= 40) {
+                addRecommendation('Su riesgo cardiovascular es alto. Consulte a un profesional de la salud para un plan personalizado.');
+            } else {
+                addRecommendation('Su riesgo cardiovascular es muy alto. Busque atención médica inmediata.');
+            }
+
+            // Recomendaciones específicas
+            if (formData.dieta_frutas_verduras !== '5') {
+                addRecommendation('Incremente el consumo de frutas y verduras a 5 porciones diarias.');
+            }
+            if (formData.actividad_minutos === '0-30') {
+                addRecommendation('Realice al menos 150 minutos de actividad física moderada por semana.');
+            }
+            if (formData.tabaco_fuma === 'si') {
+                addRecommendation('Considere dejar de fumar para mejorar su salud cardiovascular.');
+            }
+        }
+
+        function addRecommendation(text) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            const recommendationCard = document.createElement('div');
+            recommendationCard.className = 'recommendation-card';
+            recommendationCard.innerHTML = `<p>${text}</p>`;
+            recommendationsContainer.appendChild(recommendationCard);
+        }
+    </script>
+</body>
+
+</html>

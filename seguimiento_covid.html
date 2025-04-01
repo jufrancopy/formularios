@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento Post-COVID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f8f9fa;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+        }
+
+        .card-evaluation {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            padding: 1.2rem;
+        }
+
+        .step {
+            display: none;
+            padding: 2rem;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .progress {
+            height: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-custom:hover {
+            background-color: #3b7ecc;
+            color: white;
+        }
+
+        .btn-outline-custom {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .risk-indicator {
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            background: linear-gradient(to right, var(--success-color), var(--warning-color), var(--danger-color));
+            position: relative;
+        }
+
+        .risk-marker {
+            position: absolute;
+            top: -15px;
+            width: 2px;
+            height: 20px;
+            background-color: black;
+            transform: translateX(-50%);
+        }
+
+        .risk-label {
+            position: absolute;
+            top: 10px;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        .result-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .risk-badge {
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .risk-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .risk-moderate {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .risk-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .recommendation-card {
+            border-left: 4px solid var(--primary-color);
+            background-color: #f0f8f7;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .factor-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .factor-name {
+            font-weight: 500;
+        }
+
+        .factor-value {
+            font-weight: 600;
+        }
+
+        .factor-excellent {
+            color: var(--success-color);
+        }
+
+        .factor-good {
+            color: #5bc0de;
+        }
+
+        .factor-fair {
+            color: var(--warning-color);
+        }
+
+        .factor-poor {
+            color: var(--danger-color);
+        }
+
+        .floating-home-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .floating-home-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="card card-evaluation">
+            <div class="card-header text-center">
+                <h3>Seguimiento Post-COVID</h3>
+                <p class="mb-0">Evaluación de Síntomas Persistentes y Complicaciones</p>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 0%" id="progressBar"></div>
+            </div>
+            <form id="postCovidForm">
+                <!-- Paso 1: Datos Personales -->
+                <div class="step active" id="step1">
+                    <h4 class="mb-4"><i class="fas fa-user factor-icon"></i>Datos Personales</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre completo</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edad" name="edad" min="18" max="120" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" name="sexo" required>
+                                <option value="">Seleccione...</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="fecha" class="form-label">Fecha de seguimiento</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary disabled">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(1, 2)">Siguiente</button>
+                    </div>
+                </div>
+                <!-- Paso 2: Síntomas Respiratorios -->
+                <div class="step" id="step2">
+                    <h4 class="mb-4"><i class="fas fa-lungs factor-icon"></i>Síntomas Respiratorios</h4>
+                    <div class="mb-3">
+                        <label class="form-label">¿Tiene dificultad para respirar o falta de aire?</label>
+                        <select class="form-select" name="respiratorio_dificultad" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha notado tos persistente después de la infección?</label>
+                        <select class="form-select" name="respiratorio_tos" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Siente opresión en el pecho o dolor al respirar?</label>
+                        <select class="form-select" name="respiratorio_opresion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(2, 1)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(2, 3)">Siguiente</button>
+                    </div>
+                </div>
+                <!-- Paso 3: Fatiga y Cansancio -->
+                <div class="step" id="step3">
+                    <h4 class="mb-4"><i class="fas fa-bed factor-icon"></i>Fatiga y Cansancio</h4>
+                    <div class="mb-3">
+                        <label class="form-label">¿Experimenta fatiga extrema o cansancio prolongado?</label>
+                        <select class="form-select" name="fatiga_extrema" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Tiene dificultades para realizar actividades diarias por el
+                            cansancio?</label>
+                        <select class="form-select" name="fatiga_actividades" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Siente debilidad muscular persistente?</label>
+                        <select class="form-select" name="fatiga_debilidad" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(3, 2)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="nextStep(3, 4)">Siguiente</button>
+                    </div>
+                </div>
+                <!-- Paso 4: Salud Mental y Neurocognitiva -->
+                <div class="step" id="step4">
+                    <h4 class="mb-4"><i class="fas fa-brain factor-icon"></i>Salud Mental y Neurocognitiva</h4>
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha experimentado problemas de memoria o concentración ("niebla
+                            mental")?</label>
+                        <select class="form-select" name="neuro_memoria" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Siente ansiedad o cambios emocionales persistentes?</label>
+                        <select class="form-select" name="neuro_ansiedad" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Ha tenido insomnio o alteraciones del sueño?</label>
+                        <select class="form-select" name="neuro_sueno" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nunca">Nunca</option>
+                            <option value="ocasionalmente">Ocasionalmente</option>
+                            <option value="frecuentemente">Frecuentemente</option>
+                            <option value="siempre">Siempre</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(4, 3)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="calculatePostCovidRisk()">Calcular
+                            Resultados</button>
+                    </div>
+                </div>
+                <!-- Paso 5: Resultados -->
+                <div class="step" id="step5">
+                    <h4 class="mb-4 text-center">Resultados del Seguimiento Post-COVID</h4>
+                    <div class="result-card">
+                        <h5 class="result-title">Resumen de Síntomas</h5>
+                        <div class="factor-score">
+                            <span class="factor-name">1. Respiratorios</span>
+                            <span class="factor-value" id="result-respiratorio">-</span>
+                        </div>
+                        <div class="factor-score">
+                            <span class="factor-name">2. Fatiga</span>
+                            <span class="factor-value" id="result-fatiga">-</span>
+                        </div>
+                        <div class="factor-score">
+                            <span class="factor-name">3. Neurocognitivos</span>
+                            <span class="factor-value" id="result-neuro">-</span>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h5 class="result-title">Puntuación General</h5>
+                        <div class="text-center mb-3">
+                            <h2 id="puntuacion-total">-</h2>
+                            <span class="risk-badge" id="riesgo-categoria">-</span>
+                        </div>
+                        <div class="risk-indicator">
+                            <div class="risk-marker" style="left: 10%;"></div>
+                            <div class="risk-marker" style="left: 30%;"></div>
+                            <div class="risk-marker" style="left: 70%;"></div>
+                            <div class="risk-marker" style="left: 90%;"></div>
+                            <div class="risk-label" style="left: 10%;">Bajo</div>
+                            <div class="risk-label" style="left: 30%;">Moderado</div>
+                            <div class="risk-label" style="left: 70%;">Alto</div>
+                            <div class="risk-label" style="left: 90%;">Muy alto</div>
+                            <div class="risk-marker" id="risk-pointer"
+                                style="left: 50%; background-color: var(--primary-color); width: 4px; height: 25px; top: -20px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h5 class="result-title">Recomendaciones Personalizadas</h5>
+                        <div id="recommendations-container">
+                            <!-- Las recomendaciones se generarán aquí -->
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-custom" onclick="prevStep(5, 4)">Anterior</button>
+                        <button type="button" class="btn btn-custom" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimir Resultados
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Botón flotante para volver al index -->
+    <a href="index.html" class="floating-home-btn">
+        <i class="fas fa-home"></i>
+    </a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Variables globales
+        let formData = {};
+        const totalSteps = 5;
+
+        // Funciones de navegación entre pasos (reutiliza las mismas funciones del archivo original)
+        function nextStep(current, next) {
+            const currentStepElement = document.getElementById(`step${current}`);
+            const requiredInputs = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+            requiredInputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos requeridos',
+                    text: 'Por favor complete todos los campos obligatorios antes de continuar.',
+                    confirmButtonColor: '#4a90e2'
+                });
+                return;
+            }
+            saveStepData(current);
+            updateProgress(next);
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${next}`).classList.add('active');
+        }
+
+        function prevStep(current, prev) {
+            saveStepData(current);
+            updateProgress(prev);
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${prev}`).classList.add('active');
+        }
+
+        function updateProgress(step) {
+            const progressPercentage = (step / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        }
+
+        function saveStepData(step) {
+            const stepElement = document.getElementById(`step${step}`);
+            const inputs = stepElement.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                formData[input.name] = input.value;
+            });
+        }
+
+        // Función para calcular riesgos
+        function calculatePostCovidRisk() {
+            saveStepData(4);
+
+            const respiratorioScore = calculateRespiratoryScore();
+            const fatigaScore = calculateFatigueScore();
+            const neuroScore = calculateNeuroScore();
+
+            const totalScore = Math.round((respiratorioScore + fatigaScore + neuroScore) / 3);
+
+            showResults(respiratorioScore, fatigaScore, neuroScore, totalScore);
+            updateProgress(5);
+            document.getElementById(`step4`).classList.remove('active');
+            document.getElementById(`step5`).classList.add('active');
+        }
+
+        // Funciones de cálculo para cada factor
+        function calculateRespiratoryScore() {
+            let score = 0;
+            switch (formData.respiratorio_dificultad) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            switch (formData.respiratorio_tos) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            switch (formData.respiratorio_opresion) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        function calculateFatigueScore() {
+            let score = 0;
+            switch (formData.fatiga_extrema) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            switch (formData.fatiga_actividades) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            switch (formData.fatiga_debilidad) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        function calculateNeuroScore() {
+            let score = 0;
+            switch (formData.neuro_memoria) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            switch (formData.neuro_ansiedad) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            switch (formData.neuro_sueno) {
+                case 'nunca': score += 100; break;
+                case 'ocasionalmente': score += 75; break;
+                case 'frecuentemente': score += 50; break;
+                case 'siempre': score += 25; break;
+            }
+            return Math.round(score / 3);
+        }
+
+        // Mostrar resultados
+        function showResults(respiratorioScore, fatigaScore, neuroScore, totalScore) {
+            document.getElementById('result-respiratorio').textContent = getScoreLabel(respiratorioScore);
+            document.getElementById('result-fatiga').textContent = getScoreLabel(fatigaScore);
+            document.getElementById('result-neuro').textContent = getScoreLabel(neuroScore);
+
+            document.getElementById('puntuacion-total').textContent = totalScore;
+
+            let riesgoCategoria = '';
+            if (totalScore >= 80) riesgoCategoria = 'Bajo';
+            else if (totalScore >= 60) riesgoCategoria = 'Moderado';
+            else if (totalScore >= 40) riesgoCategoria = 'Alto';
+            else riesgoCategoria = 'Muy alto';
+
+            const riesgoElement = document.getElementById('riesgo-categoria');
+            riesgoElement.textContent = riesgoCategoria;
+            if (totalScore >= 80) riesgoElement.classList.add('risk-low');
+            else if (totalScore >= 60) riesgoElement.classList.add('risk-moderate');
+            else if (totalScore >= 40) riesgoElement.classList.add('risk-high');
+
+            const riskPointer = document.getElementById('risk-pointer');
+            const position = (totalScore / 100) * 100;
+            riskPointer.style.left = `${position}%`;
+
+            generateRecommendations(totalScore);
+        }
+
+        function getScoreLabel(score) {
+            if (score >= 80) return `${score} - Excelente`;
+            if (score >= 60) return `${score} - Buena`;
+            if (score >= 40) return `${score} - Regular`;
+            return `${score} - Deficiente`;
+        }
+
+        function generateRecommendations(totalScore) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            recommendationsContainer.innerHTML = '';
+
+            if (totalScore >= 80) {
+                addRecommendation('Su estado post-COVID es estable. Mantenga hábitos saludables.');
+            } else if (totalScore >= 60) {
+                addRecommendation('Tiene síntomas moderados. Considere consultar a un médico si persisten.');
+            } else if (totalScore >= 40) {
+                addRecommendation('Sus síntomas son severos. Busque atención médica especializada.');
+            } else {
+                addRecommendation('Su condición requiere atención médica inmediata.');
+            }
+
+            if (formData.respiratorio_dificultad === 'frecuentemente' || formData.respiratorio_dificultad === 'siempre') {
+                addRecommendation('Consulte a un neumólogo para evaluar su función pulmonar.');
+            }
+            if (formData.fatiga_extrema === 'frecuentemente' || formData.fatiga_extrema === 'siempre') {
+                addRecommendation('Considere realizar ejercicio ligero progresivo para mejorar su energía.');
+            }
+            if (formData.neuro_memoria === 'frecuentemente' || formData.neuro_memoria === 'siempre') {
+                addRecommendation('Practique ejercicios cognitivos como crucigramas o juegos de memoria.');
+            }
+        }
+
+        function addRecommendation(text) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            const recommendationCard = document.createElement('div');
+            recommendationCard.className = 'recommendation-card';
+            recommendationCard.innerHTML = `<p>${text}</p>`;
+            recommendationsContainer.appendChild(recommendationCard);
+        }
+    </script>
+</body>
+
+</html>
