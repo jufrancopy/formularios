@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica de Enfermería</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Poppins', sans-serif;
+            color: #334155;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px 40px;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        h1 {
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .form-section {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-title {
+            color: #1e40af;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 60px;
+            height: 2px;
+            background-color: #3b82f6;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            height: auto;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-group-text {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            border: none;
+            color: #64748b;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            max-width: 100px;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #e2e8f0;
+            top: 15px;
+            left: 50%;
+            z-index: -1;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #64748b;
+            margin-bottom: 5px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .step-text {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            display: none;
+        }
+
+        .step.active .step-number {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .step.active .step-text {
+            color: #3b82f6;
+            font-weight: 500;
+            display: block;
+        }
+
+        .step.completed .step-number {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .step.completed:not(:last-child)::after {
+            background-color: #10b981;
+        }
+
+        .form-check-label {
+            margin-left: 5px;
+            font-weight: normal;
+        }
+
+        .form-check-input:checked {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .completed-badge {
+            display: none;
+            color: #10b981;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            background-color: #e2e8f0;
+        }
+
+        .progress-bar {
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single,
+        .select2-container--default .select2-selection--multiple {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 5px;
+            height: auto;
+            min-height: 42px;
+        }
+
+        .results-container {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        #formResults {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .result-section {
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        .result-label {
+            font-weight: 500;
+            width: 200px;
+            color: #475569;
+        }
+
+        .result-value {
+            flex: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .step-text {
+                display: none;
+            }
+
+            .step.active .step-text {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="form-container">
+            <div class="header">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h1>Historia Clínica de Enfermería</h1>
+                </div>
+                <div class="step-indicator">
+                    <div class="step active" id="step1">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Datos Generales</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Signos Vitales</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Evaluación Clínica</div>
+                    </div>
+                    <div class="step" id="step4">
+                        <div class="step-number">4</div>
+                        <div class="step-text">Estilo de Vida</div>
+                    </div>
+                    <div class="step" id="step5">
+                        <div class="step-number">5</div>
+                        <div class="step-text">Exámenes</div>
+                    </div>
+                    <div class="step" id="step6">
+                        <div class="step-number">6</div>
+                        <div class="step-text">Consejería</div>
+                    </div>
+                    <div class="step" id="step7">
+                        <div class="step-number">7</div>
+                        <div class="step-text">Seguimiento</div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 14.28%" aria-valuenow="14.28"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+
+            <form id="clinicalForm">
+                <!-- Sección 1: Datos Generales del Paciente -->
+                <div class="form-section active-section" id="section1">
+                    <h3 class="section-title">
+                        Datos Generales del Paciente
+                        <span class="completed-badge" id="badge1"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre y Apellido</label>
+                            <input type="text" class="form-control" id="nombre" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edad" min="0" max="120" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" required>
+                                <option value="">Seleccionar</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-3">
+                            <label for="historiaClinica" class="form-label">N° de Historia Clínica</label>
+                            <input type="text" class="form-control" id="historiaClinica" required>
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label for="motivoConsulta" class="form-label">Motivo de Consulta</label>
+                            <textarea class="form-control" id="motivoConsulta" rows="2" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3">
+                            <label for="fechaAtencion" class="form-label">Fecha y Hora de la Atención</label>
+                            <input type="datetime-local" class="form-control" id="fechaAtencion" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="profesionalEnfermeria" class="form-label">Profesional de Enfermería
+                                Responsable</label>
+                            <input type="text" class="form-control" id="profesionalEnfermeria" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 2: Signos Vitales -->
+                <div class="form-section" id="section2">
+                    <h3 class="section-title">
+                        Signos Vitales
+                        <span class="completed-badge" id="badge2"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <label for="frecuenciaCardiaca" class="form-label">Frecuencia Cardíaca</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="frecuenciaCardiaca" min="0" max="300"
+                                    required>
+                                <span class="input-group-text">lpm</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="presionArterial" class="form-label">Presión Arterial</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="presionArterial" placeholder="120/80"
+                                    required>
+                                <span class="input-group-text">mmHg</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="frecuenciaRespiratoria" class="form-label">Frecuencia Respiratoria</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="frecuenciaRespiratoria" min="0" max="60"
+                                    required>
+                                <span class="input-group-text">rpm</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="temperatura" class="form-label">Temperatura</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="temperatura" min="20" max="45" step="0.1"
+                                    required>
+                                <span class="input-group-text">°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="saturacionOxigeno" class="form-label">Saturación de Oxígeno</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="saturacionOxigeno" min="0" max="100"
+                                    required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="peso" class="form-label">Peso</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="peso" min="0" max="300" step="0.1"
+                                    required>
+                                <span class="input-group-text">kg</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3">
+                            <label for="talla" class="form-label">Talla</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="talla" min="0" max="250" step="0.1"
+                                    required>
+                                <span class="input-group-text">cm</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="imc" class="form-label">Índice de Masa Corporal (IMC)</label>
+                            <input type="text" class="form-control" id="imc" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 3: Evaluación Clínica -->
+                <div class="form-section" id="section3">
+                    <h3 class="section-title">
+                        Evaluación Clínica
+                        <span class="completed-badge" id="badge3"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-3">
+                            <label for="antecedentesMedicos" class="form-label">Antecedentes Médicos</label>
+                            <textarea class="form-control" id="antecedentesMedicos" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-3">
+                            <label for="alergias" class="form-label">Alergias</label>
+                            <textarea class="form-control" id="alergias" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-3">
+                            <label for="medicamentosActuales" class="form-label">Medicamentos Actuales</label>
+                            <textarea class="form-control" id="medicamentosActuales" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label for="observacionesClinicas" class="form-label">Observaciones Clínicas</label>
+                            <textarea class="form-control" id="observacionesClinicas" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 4: Estilo de Vida -->
+                <div class="form-section" id="section4">
+                    <h3 class="section-title">
+                        Estilo de Vida
+                        <span class="completed-badge" id="badge4"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="habitosAlimenticios" class="form-label">Hábitos Alimenticios</label>
+                            <textarea class="form-control" id="habitosAlimenticios" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="actividadFisica" class="form-label">Actividad Física</label>
+                            <textarea class="form-control" id="actividadFisica" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="consumoTabaco" class="form-label">Consumo de Tabaco</label>
+                            <select class="form-select" id="consumoTabaco">
+                                <option value="">Seleccionar</option>
+                                <option value="Nunca">Nunca</option>
+                                <option value="Ocasional">Ocasional</option>
+                                <option value="Frecuente">Frecuente</option>
+                                <option value="Ex-fumador">Ex-fumador</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="consumoAlcohol" class="form-label">Consumo de Alcohol</label>
+                            <select class="form-select" id="consumoAlcohol">
+                                <option value="">Seleccionar</option>
+                                <option value="Nunca">Nunca</option>
+                                <option value="Ocasional">Ocasional</option>
+                                <option value="Frecuente">Frecuente</option>
+                                <option value="Ex-consumidor">Ex-consumidor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label for="observacionesEstiloVida" class="form-label">Observaciones sobre Estilo de
+                                Vida</label>
+                            <textarea class="form-control" id="observacionesEstiloVida" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 5: Exámenes -->
+                <div class="form-section" id="section5">
+                    <h3 class="section-title">
+                        Exámenes
+                        <span class="completed-badge" id="badge5"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="examenesSolicitados" class="form-label">Exámenes Solicitados</label>
+                            <textarea class="form-control" id="examenesSolicitados" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="resultadosExamenes" class="form-label">Resultados de Exámenes</label>
+                            <textarea class="form-control" id="resultadosExamenes" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label for="observacionesExamenes" class="form-label">Observaciones sobre Exámenes</label>
+                            <textarea class="form-control" id="observacionesExamenes" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 6: Consejería -->
+                <div class="form-section" id="section6">
+                    <h3 class="section-title">
+                        Consejería
+                        <span class="completed-badge" id="badge6"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-12 mb-3">
+                            <label for="consejeria" class="form-label">Consejería Brindada</label>
+                            <textarea class="form-control" id="consejeria" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label for="recomendaciones" class="form-label">Recomendaciones</label>
+                            <textarea class="form-control" id="recomendaciones" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 7: Seguimiento -->
+                <div class="form-section" id="section7">
+                    <h3 class="section-title">
+                        Seguimiento
+                        <span class="completed-badge" id="badge7"><i class="fas fa-check-circle"></i> Completado</span>
+                    </h3>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="fechaSeguimiento" class="form-label">Fecha de Seguimiento</label>
+                            <input type="date" class="form-control" id="fechaSeguimiento">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="proximoControl" class="form-label">Próximo Control</label>
+                            <input type="date" class="form-control" id="proximoControl">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <label for="observacionesSeguimiento" class="form-label">Observaciones de
+                                Seguimiento</label>
+                            <textarea class="form-control" id="observacionesSeguimiento" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Navegación -->
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-secondary" id="prevBtn"
+                        onclick="prevSection()">Anterior</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn"
+                        onclick="nextSection()">Siguiente</button>
+                </div>
+            </form>
+
+            <!-- Resultados del Formulario -->
+            <div class="results-container" id="resultsContainer">
+                <h3 class="section-title">Resumen de la Historia Clínica</h3>
+                <div id="formResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script>
+        // Variables para controlar las secciones
+        let currentSection = 1;
+        const totalSections = 7;
+
+        // Función para mostrar la sección actual
+        function showSection(sectionNumber) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            document.getElementById(`section${sectionNumber}`).classList.add('active-section');
+            updateProgressBar(sectionNumber);
+            updateStepIndicator(sectionNumber);
+            updateNavigationButtons(sectionNumber);
+        }
+
+        // Función para actualizar la barra de progreso
+        function updateProgressBar(sectionNumber) {
+            const progress = (sectionNumber / totalSections) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+            document.querySelector('.progress-bar').setAttribute('aria-valuenow', progress);
+        }
+
+        // Función para actualizar el indicador de pasos
+        function updateStepIndicator(sectionNumber) {
+            document.querySelectorAll('.step').forEach((step, index) => {
+                if (index + 1 === sectionNumber) {
+                    step.classList.add('active');
+                } else if (index + 1 < sectionNumber) {
+                    step.classList.add('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        // Función para actualizar los botones de navegación
+        function updateNavigationButtons(sectionNumber) {
+            if (sectionNumber === 1) {
+                document.getElementById('prevBtn').style.display = 'none';
+            } else {
+                document.getElementById('prevBtn').style.display = 'inline-block';
+            }
+
+            if (sectionNumber === totalSections) {
+                document.getElementById('nextBtn').textContent = 'Finalizar';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Siguiente';
+            }
+        }
+
+        // Función para avanzar a la siguiente sección
+        function nextSection() {
+            if (currentSection < totalSections) {
+                currentSection++;
+                showSection(currentSection);
+            } else {
+                // Finalizar el formulario y mostrar los resultados
+                document.getElementById('clinicalForm').style.display = 'none';
+                document.getElementById('resultsContainer').style.display = 'block';
+                generateResults();
+            }
+        }
+
+        // Función para retroceder a la sección anterior
+        function prevSection() {
+            if (currentSection > 1) {
+                currentSection--;
+                showSection(currentSection);
+            }
+        }
+
+        // Función para generar los resultados del formulario
+        function generateResults() {
+            const results = document.getElementById('formResults');
+            results.innerHTML = '';
+
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                const sectionTitle = section.querySelector('.section-title').textContent.trim();
+                const sectionContent = section.querySelectorAll('input, select, textarea');
+
+                const sectionResults = document.createElement('div');
+                sectionResults.classList.add('result-section');
+
+                const title = document.createElement('div');
+                title.classList.add('result-title');
+                title.textContent = sectionTitle;
+                sectionResults.appendChild(title);
+
+                sectionContent.forEach(input => {
+                    if (input.value) {
+                        const item = document.createElement('div');
+                        item.classList.add('result-item');
+
+                        const label = document.createElement('div');
+                        label.classList.add('result-label');
+                        label.textContent = input.labels[0].textContent;
+                        item.appendChild(label);
+
+                        const value = document.createElement('div');
+                        value.classList.add('result-value');
+                        value.textContent = input.value;
+                        item.appendChild(value);
+
+                        sectionResults.appendChild(item);
+                    }
+                });
+
+                results.appendChild(sectionResults);
+            });
+        }
+
+        // Inicializar la primera sección
+        showSection(currentSection);
+    </script>
+</body>
+
+</html>
