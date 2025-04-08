@@ -4,141 +4,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio de Formularios Médicos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <title>Ficha PREVIBUS EMPRESA</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- Para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :root {
-            --primary-color: #0f6f61;
-            --secondary-color: #f8f9fa;
-            --accent-color: #ff6b6b;
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
         }
 
         body {
+            background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
             background-color: var(--secondary-color);
-            color: #333;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #1a936f 100%);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 3rem;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-formulario {
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
             border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-bottom: 25px;
-            height: 100%;
         }
 
-        .card-formulario:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+            padding: 15px;
         }
 
-        .card-img-top {
-            height: 180px;
-            object-fit: contain;
-            padding: 1.5rem;
-            background-color: #f0f8f7;
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
-        .card-body {
-            padding: 1.5rem;
+        .form-label {
+            font-weight: 500;
+            color: var(--dark-color);
         }
 
-        .card-title {
+        .required-field::after {
+            content: " *";
+            color: var(--accent-color);
+        }
+
+        .progress-nav {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-step {
+            position: relative;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+        }
+
+        .progress-step.active {
             color: var(--primary-color);
             font-weight: 600;
-            margin-bottom: 1rem;
         }
 
-        .card-text {
-            color: #666;
-            margin-bottom: 1.5rem;
+        .progress-step.completed {
+            color: #27ae60;
         }
 
-        .badge-categoria {
-            background-color: #e0f2f1;
-            color: var(--primary-color);
-            font-weight: 500;
-            margin-right: 8px;
-            margin-bottom: 8px;
-        }
-
-        .rating-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-        }
-
-        .rating-stars {
-            color: #ffc107;
-            font-size: 1.2rem;
-        }
-
-        .rating-count {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary-custom {
-            background-color: var(--primary-color);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-        }
-
-        .btn-primary-custom:hover {
-            background-color: #0d5c50;
-        }
-
-        .footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-
-        .search-container {
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-
-        .category-filter {
-            margin-bottom: 2rem;
-        }
-
-        .category-btn {
-            margin-right: 8px;
-            margin-bottom: 8px;
-            border-radius: 20px;
-        }
-
-        .active-category {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .floating-btn {
+        .floating-home-btn {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background-color: var(--primary-color);
             color: white;
             display: flex;
             align-items: center;
@@ -149,529 +107,2526 @@
             transition: all 0.3s;
         }
 
-        .floating-btn:hover {
+        .floating-home-btn:hover {
             transform: scale(1.1);
             color: white;
+        }
+
+        .factor-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary-color);
         }
     </style>
 </head>
 
 <body>
-    <!-- Hero Section -->
-    <section class="hero-section text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-3">Portafolio de Formularios Médicos</h1>
-            <p class="lead mb-4">Herramientas digitales para la evaluación integral de pacientes</p>
-            <!-- Hero Section 
-            <div class="search-container">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar formularios..." id="searchInput">
-                    <button class="btn btn-light" type="button">
-                        <i class="fas fa-search"></i>
+    <div class="container mb-5">
+        <!-- Navbar simplificado -->
+        <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-heartbeat me-2"></i>PREVIBUS
+                </a>
+                <div class="d-flex">
+                    <!-- <li class="nav-item">
+                    <a class="nav-link" href="#" id="searchBtn">
+                        <i class="fas fa-search me-1"></i> Buscar
+                    </a>
+                </li> -->
+                    <!-- <button class="btn btn-success me-2" id="saveBtn">
+                        <i class="fas fa-save me-1"></i> Guardar
+                    </button> -->
+                    <button class="btn btn-info me-2" id="generateReportBtn">
+                        <i class="fas fa-chart-line me-1"></i> Reporte
+                    </button>
+                    <button class="btn btn-danger me-2" id="generatePDFBtn">
+                        <i class="fas fa-file-pdf"></i> Generar PDF
+                    </button>
+                    <button class="btn btn-warning" id="resetearRegistrosBtn">
+                        <i class="fas fa-trash-alt me-1"></i> Resetear
                     </button>
                 </div>
             </div>
-            -->
-        </div>
-    </section>
+        </nav>
 
-    <!-- Categorías 
-    <div class="container category-filter">
-        <div class="text-center">
-            <button class="btn btn-outline-primary category-btn active-category" data-category="all">Todos</button>
-            <button class="btn btn-outline-primary category-btn" data-category="preconsulta">Pre-Consulta</button>
-            <button class="btn btn-outline-primary category-btn" data-category="evaluacion">Evaluación</button>
-            <button class="btn btn-outline-primary category-btn" data-category="seguimiento">Seguimiento</button>
-            <button class="btn btn-outline-primary category-btn" data-category="especialidad">Especialidad</button>
+        <!-- Formulario principal -->
+        <div class="container mb-5">
+            <div id="mainContent">
+                <!-- Progress Navigation -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="progress-nav d-flex justify-content-between">
+                            <div class="progress-step active" data-tab="datosGenerales">
+                                <div class="progress-step-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>Datos Generales</div>
+                            </div>
+                            <div class="progress-step" data-tab="evaluacionEnfermeria">
+                                <div class="progress-step-icon">
+                                    <i class="fas fa-stethoscope"></i>
+                                </div>
+                                <div>Enfermería</div>
+                            </div>
+                            <div class="progress-step" data-tab="evaluacionNutricional">
+                                <div class="progress-step-icon">
+                                    <i class="fas fa-apple-alt"></i>
+                                </div>
+                                <div>Nutricional</div>
+                            </div>
+                            <div class="progress-step" data-tab="evaluacionOdontologica">
+                                <div class="progress-step-icon">
+                                    <i class="fas fa-tooth"></i>
+                                </div>
+                                <div>Odontológica</div>
+                            </div>
+                            <div class="progress-step" data-tab="evaluacionPsicologica">
+                                <div class="progress-step-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div>Psicológica</div>
+                            </div>
+                            <div class="progress-step" data-tab="evaluacionMedica">
+                                <div class="progress-step-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div>Médica</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Tabs -->
+                <div class="tab-content">
+                    <!-- Datos Generales Tab -->
+                    <form action="" id="employeeForm">
+                        <div class="tab-pane fade show active" id="datosGenerales" data-block="datosGenerales">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <i class="fas fa-building me-2"></i> Datos de la Empresa y Visitas
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="nombre_empresa" class="form-label">Nombre de la
+                                                    Empresa:</label>
+                                                <input type="text" class="form-control" id="nombre_empresa"
+                                                    name="nombre_empresa">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="actividad_rubro" class="form-label">Actividad /
+                                                    Rubro:</label>
+                                                <input type="text" class="form-control" id="actividad_rubro"
+                                                    name="actividad_rubro">
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label for="fecha_turno_primera_visita" class="form-label">Fecha
+                                                            y
+                                                            turno
+                                                            de 1° visita:</label>
+                                                        <input type="date" class="form-control"
+                                                            id="fecha_turno_primera_visita"
+                                                            name="fecha_turno_primera_visita">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label for="fecha_turno_segunda_visita" class="form-label">Fecha
+                                                            y
+                                                            turno
+                                                            de 2° visita:</label>
+                                                        <input type="date" class="form-control"
+                                                            id="fecha_turno_segunda_visita"
+                                                            name="fecha_turno_segunda_visita">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <i class="fas fa-user me-2"></i> Datos del Empleado
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <label for="nombre_apellido" class="form-label">Nombre y
+                                                    Apellido:</label>
+                                                <input type="text" class="form-control" id="nombre_apellido"
+                                                    name="nombre_apellido">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="n_ci" class="form-label">N° de CI: <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="number" class="form-control" id="n_ci" name="n_ci"
+                                                    required>
+                                                <small class="text-muted">Este campo es obligatorio y será utilizado
+                                                    como
+                                                    identificador único.</small>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label for="antiguedad_empresarial"
+                                                            class="form-label">Antigüedad
+                                                            empresarial:</label>
+                                                        <input type="number" class="form-control"
+                                                            id="antiguedad_empresarial" name="antiguedad_empresarial">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label for="telefono" class="form-label">Teléfono:</label>
+                                                        <input type="tel" class="form-control" id="telefono"
+                                                            name="telefono">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="localidad" class="form-label">Localidad:</label>
+                                                <input type="text" class="form-control" id="localidad" name="localidad">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label for="fecha_nacimiento" class="form-label">Fecha de
+                                                            nacimiento:</label>
+                                                        <input type="date" class="form-control" id="fecha_nacimiento"
+                                                            name="fecha_nacimiento">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label for="edad" class="form-label">Edad:</label>
+                                                        <input type="number" class="form-control" id="edad" name="edad">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Sexo:</label>
+                                                        <div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="sexo"
+                                                                    id="masculino" value="M">
+                                                                <label class="form-check-label"
+                                                                    for="masculino">M</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio" name="sexo"
+                                                                    id="femenino" value="F">
+                                                                <label class="form-check-label" for="femenino">F</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-3 p-2">
+                                <button id="guardarDatosPersonales" class="btn btn-primary me-2">Guardar</button>
+                                <button id="clearFormBtn" class=" btn btn-primary me-2">Limpiar</button>
+                                <button class="btn btn-success next-btn" data-next="evaluacionEnfermeria"
+                                    disabled>Siguiente</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Evaluación Enfermería Tab -->
+                    <div class=" tab-pane fade" id="evaluacionEnfermeria" data-block="evaluacionEnfermeria">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-stethoscope me-2"></i> Evaluación de Enfermería
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="pa" class="form-label">PA:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="pa" name="pa">
+                                            <span class="input-group-text">mmHg</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="fr" class="form-label">FR:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="fr" name="fr">
+                                            <span class="input-group-text">rpm</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="fc" class="form-label">FC:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="fc" name="fc">
+                                            <span class="input-group-text">lpm</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Alguna vez ha sufrido un ataque cardiaco o dolor de pecho
+                                        causado por una enfermedad del corazón (angina de pecho) o un ataque cerebral
+                                        (accidente cerebrovascular, apoplejía)?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="antecedente_cardiaco"
+                                                id="cardiaco_si" value="SI">
+                                            <label class="form-check-label" for="cardiaco_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="antecedente_cardiaco"
+                                                id="cardiaco_no" value="NO">
+                                            <label class="form-check-label" for="cardiaco_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Le han diagnosticado alguna vez HTA?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="diagnostico_hta"
+                                                id="hta_si" value="SI">
+                                            <label class="form-check-label" for="hta_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="diagnostico_hta"
+                                                id="hta_no" value="NO">
+                                            <label class="form-check-label" for="hta_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3" id="tiempo_hta_container" style="display: none;">
+                                    <label for="tiempo_hta" class="form-label">¿En caso afirmativo, cuanto tiempo
+                                        hace?</label>
+                                    <input type="text" class="form-control" id="tiempo_hta" name="tiempo_hta">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Toma medicación en forma regular?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="medicacion_regular"
+                                                id="medicacion_regular_si" value="SI">
+                                            <label class="form-check-label" for="medicacion_regular_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="medicacion_regular"
+                                                id="medicacion_regular_no" value="NO">
+                                            <label class="form-check-label" for="medicacion_regular_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Le han encontrado alguna hiperglicemia?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="hiperglicemia"
+                                                id="hiperglicemia_si" value="SI">
+                                            <label class="form-check-label" for="hiperglicemia_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="hiperglicemia"
+                                                id="hiperglicemia_no" value="NO">
+                                            <label class="form-check-label" for="hiperglicemia_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3" id="tiempo_hiperglicemia_container" style="display: none;">
+                                    <label for="tiempo_hiperglicemia" class="form-label">¿En caso afirmativo, cuanto
+                                        tiempo
+                                        hace?</label>
+                                    <input type="text" class="form-control" id="tiempo_hiperglicemia"
+                                        name="tiempo_hiperglicemia">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Está actualmente bajo tratamiento?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio"
+                                                name="tratamiento_hiperglicemia" id="tratamiento_hiperglicemia_si"
+                                                value="SI">
+                                            <label class="form-check-label"
+                                                for="tratamiento_hiperglicemia_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio"
+                                                name="tratamiento_hiperglicemia" id="tratamiento_hiperglicemia_no"
+                                                value="NO">
+                                            <label class="form-check-label"
+                                                for="tratamiento_hiperglicemia_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="firma_sello_enfermeria" class="form-label">FIRMA Y SELLO DEL
+                                        PROFESIONAL</label>
+                                    <textarea class="form-control" id="firma_sello_enfermeria"
+                                        name="firma_sello_enfermeria" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary prev-btn" data-prev="datosGenerales">
+                                <i class="fas fa-arrow-left me-1"></i> Anterior
+                            </button>
+                            <button id="guardarDatosPersonales" class="btn btn-primary me-2">Guardar</button>
+                            <button class="btn btn-success next-btn" data-next="datosLaborales"
+                                disabled>Siguiente</button>
+                        </div>
+                    </div>
+
+                    <!-- Evaluación Nutricion Tab -->
+                    <div class="tab-pane fade" id="evaluacionNutricional">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-apple-alt me-2"></i> Evaluación Nutricional
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ud. realiza actividad física aeróbica?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="actividad_aerobica"
+                                                id="aerobica_si" value="SI">
+                                            <label class="form-check-label" for="aerobica_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="actividad_aerobica"
+                                                id="aerobica_no" value="NO">
+                                            <label class="form-check-label" for="aerobica_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="actividad_aerobica_details" style="display: none;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="tiempo_aerobica" class="form-label">En caso afirmativo, ¿cuánto
+                                                tiempo?</label>
+                                            <input type="text" class="form-control" id="tiempo_aerobica"
+                                                name="tiempo_aerobica">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">¿y que intensidad?</label>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="intensidad_aerobica" id="aerobica_leve" value="leve">
+                                                    <label class="form-check-label" for="aerobica_leve">Leve</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="intensidad_aerobica" id="aerobica_moderada"
+                                                        value="moderada">
+                                                    <label class="form-check-label"
+                                                        for="aerobica_moderada">Moderada</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="intensidad_aerobica" id="aerobica_vigorosa"
+                                                        value="vigorosa">
+                                                    <label class="form-check-label"
+                                                        for="aerobica_vigorosa">Vigorosa</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ud. realiza actividades de fortalecimiento
+                                        muscular?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="fortalecimiento_muscular"
+                                                id="fortalecimiento_si" value="SI">
+                                            <label class="form-check-label" for="fortalecimiento_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="fortalecimiento_muscular"
+                                                id="fortalecimiento_no" value="NO">
+                                            <label class="form-check-label" for="fortalecimiento_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="fortalecimiento_details" style="display: none;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="dias_fortalecimiento" class="form-label">En caso afirmativo,
+                                                ¿cuantos días a la semana?</label>
+                                            <input type="text" class="form-control" id="dias_fortalecimiento"
+                                                name="dias_fortalecimiento">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">¿y que intensidad?</label>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="intensidad_fortalecimiento" id="fortalecimiento_moderada"
+                                                        value="moderada">
+                                                    <label class="form-check-label"
+                                                        for="fortalecimiento_moderada">Moderada</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="intensidad_fortalecimiento" id="fortalecimiento_vigorosa"
+                                                        value="vigorosa">
+                                                    <label class="form-check-label"
+                                                        for="fortalecimiento_vigorosa">Vigorosa</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ud. consume todos los días en almuerzo y cena verduras
+                                        crudas
+                                        y cocidas y 3 frutas?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="consumo_frutas_verduras"
+                                                id="consumo_frutas_verduras_si" value="SI">
+                                            <label class="form-check-label" for="consumo_frutas_verduras_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="consumo_frutas_verduras"
+                                                id="consumo_frutas_verduras_no" value="NO">
+                                            <label class="form-check-label" for="consumo_frutas_verduras_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>Consumo de Bebidas Alcohólicas</h5>
+                                    <div class="mb-3">
+                                        <label for="frecuencia_alcohol" class="form-label">¿Con qué frecuencia consumes
+                                            bebidas alcohólicas?</label>
+                                        <select class="form-select" id="frecuencia_alcohol" name="frecuencia_alcohol">
+                                            <option value="Nunca">Nunca</option>
+                                            <option value="Menos de una vez al mes">Menos de una vez al mes</option>
+                                            <option value="Mensualmente">Mensualmente</option>
+                                            <option value="Semanalmente">Semanalmente</option>
+                                            <option value="A diario o casi a diario">A diario o casi a diario</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="cantidad_alcohol_dia_normal" class="form-label">En un día normal de
+                                            consumo, ¿cuántas bebidas alcohólicas consumes?</label>
+                                        <select class="form-select" id="cantidad_alcohol_dia_normal"
+                                            name="cantidad_alcohol_dia_normal">
+                                            <option value="Una o dos">Una o dos</option>
+                                            <option value="Tres o cuatro">Tres o cuatro</option>
+                                            <option value="Cinco o seis">Cinco o seis</option>
+                                            <option value="Siete o más">Siete o más</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="firma_sello_nutricion" class="form-label">FIRMA Y SELLO DEL
+                                        PROFESIONAL</label>
+                                    <textarea class="form-control" id="firma_sello_nutricion"
+                                        name="firma_sello_nutricion" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-secondary prev-btn" data-prev="evaluacionEnfermeria">
+                                <i class="fas fa-arrow-left me-1"></i> Anterior
+                            </button>
+                            <button type="button" class="btn btn-primary next-btn" data-next="evaluacionOdontologica">
+                                Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Evaluación Odontologia Tab -->
+                    <div class="tab-pane fade" id="evaluacionOdontologica">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-tooth me-2"></i> Evaluación Odontológica
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ud. considera que tiene una boca sana?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="boca_sana"
+                                                id="boca_sana_si" value="SI">
+                                            <label class="form-check-label" for="boca_sana_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="boca_sana"
+                                                id="boca_sana_no" value="NO">
+                                            <label class="form-check-label" for="boca_sana_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Su boca ha sido rehabilitada o tiene todos sus
+                                        tratamientos
+                                        completados?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="boca_rehabilitada"
+                                                id="boca_rehabilitada_si" value="SI">
+                                            <label class="form-check-label" for="boca_rehabilitada_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="boca_rehabilitada"
+                                                id="boca_rehabilitada_no" value="NO">
+                                            <label class="form-check-label" for="boca_rehabilitada_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ha sido diagnosticado con enfermedad periodontal
+                                        (periodontitis o
+                                        gingivitis)?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="enfermedad_periodontal"
+                                                id="enfermedad_periodontal_si" value="SI">
+                                            <label class="form-check-label" for="enfermedad_periodontal_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="enfermedad_periodontal"
+                                                id="enfermedad_periodontal_no" value="NO">
+                                            <label class="form-check-label" for="enfermedad_periodontal_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Tiene caries dental que no ha sido tratada?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="caries_no_tratada"
+                                                id="caries_no_tratada_si" value="SI">
+                                            <label class="form-check-label" for="caries_no_tratada_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="caries_no_tratada"
+                                                id="caries_no_tratada_no" value="NO">
+                                            <label class="form-check-label" for="caries_no_tratada_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Tiene alguna lesión en la boca o labio que no desaparece
+                                        por
+                                        más de un
+                                        mes?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="lesion_boca_labio"
+                                                id="lesion_boca_labio_si" value="SI">
+                                            <label class="form-check-label" for="lesion_boca_labio_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="lesion_boca_labio"
+                                                id="lesion_boca_labio_no" value="NO">
+                                            <label class="form-check-label" for="lesion_boca_labio_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ha tenido infecciones odontogénicas agudas o crónicas
+                                        (abscesos,
+                                        flemones, etc.)?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio"
+                                                name="infecciones_odontogenicas" id="infecciones_odontogenicas_si"
+                                                value="SI">
+                                            <label class="form-check-label"
+                                                for="infecciones_odontogenicas_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio"
+                                                name="infecciones_odontogenicas" id="infecciones_odontogenicas_no"
+                                                value="NO">
+                                            <label class="form-check-label"
+                                                for="infecciones_odontogenicas_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">¿Ha perdido muchos dientes debido a traumatismos o por
+                                        otras
+                                        razones?</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="perdida_dentaria"
+                                                id="perdida_dentaria_si" value="SI">
+                                            <label class="form-check-label" for="perdida_dentaria_si">SI</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="perdida_dentaria"
+                                                id="perdida_dentaria_no" value="NO">
+                                            <label class="form-check-label" for="perdida_dentaria_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="firma_sello_odontologia" class="form-label">FIRMA Y SELLO DEL
+                                        PROFESIONAL</label>
+                                    <textarea class="form-control" id="firma_sello_odontologia"
+                                        name="firma_sello_odontologia" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-btn"
+                                    data-prev="evaluacionNutricional">
+                                    <i class="fas fa-arrow-left me-1"></i> Anterior
+                                </button>
+                                <button type="button" class="btn btn-primary next-btn" data-next="otraEvaluacion">
+                                    Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evaluación Psicologia Tab -->
+                    <div class="tab-pane fade" id="evaluacionPsicologica">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-brain me-2"></i> Evaluación Psicológica
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <h5>1° VISITA - Test de Estrés Laboral</h5>
+                                    <div class="mb-3">
+                                        <label for="resultado_estres_primera_visita" class="form-label">Resultado
+                                            final</label>
+                                        <input type="text" class="form-control" id="resultado_estres_primera_visita"
+                                            name="resultado_estres_primera_visita" size="10"> puntos
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nivel de estrés</label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_primera_visita" id="sin_estres_primera_visita"
+                                                    value="Sin estrés">
+                                                <label class="form-check-label" for="sin_estres_primera_visita">Sin
+                                                    estrés 0
+                                                    – 12 p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_primera_visita" id="alarma_primera_visita"
+                                                    value="SE - Fase de alarma">
+                                                <label class="form-check-label" for="alarma_primera_visita">SE - Fase de
+                                                    alarma 13 – 24
+                                                    p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_primera_visita" id="estres_leve_primera_visita"
+                                                    value="Estrés leve">
+                                                <label class="form-check-label" for="estres_leve_primera_visita">Estrés
+                                                    leve
+                                                    25 – 36 p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_primera_visita" id="estres_medio_primera_visita"
+                                                    value="Estrés medio">
+                                                <label class="form-check-label" for="estres_medio_primera_visita">Estrés
+                                                    medio 37 – 48
+                                                    p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_primera_visita" id="estres_alto_primera_visita"
+                                                    value="Estrés alto">
+                                                <label class="form-check-label" for="estres_alto_primera_visita">Estrés
+                                                    alto
+                                                    49 – 60 p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_primera_visita" id="estres_grave_primera_visita"
+                                                    value="Estrés grave">
+                                                <label class="form-check-label" for="estres_grave_primera_visita">Estrés
+                                                    grave 61 – 72
+                                                    p</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sugerencias_primera_visita" class="form-label">SUGERENCIAS</label>
+                                        <textarea class="form-control" id="sugerencias_primera_visita"
+                                            name="sugerencias_primera_visita" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="observaciones_primera_visita"
+                                            class="form-label">OBSERVACIONES</label>
+                                        <textarea class="form-control" id="observaciones_primera_visita"
+                                            name="observaciones_primera_visita" rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>2° VISITA - Test de Estrés Laboral</h5>
+                                    <div class="mb-3">
+                                        <label for="resultado_estres_segunda_visita" class="form-label">Resultado
+                                            final</label>
+                                        <input type="text" class="form-control" id="resultado_estres_segunda_visita"
+                                            name="resultado_estres_segunda_visita" size="10"> puntos
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nivel de estrés</label>
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_segunda_visita" id="sin_estres_segunda_visita"
+                                                    value="Sin estrés">
+                                                <label class="form-check-label" for="sin_estres_segunda_visita">Sin
+                                                    estrés 0
+                                                    – 12 p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_segunda_visita" id="alarma_segunda_visita"
+                                                    value="SE - Fase de alarma">
+                                                <label class="form-check-label" for="alarma_segunda_visita">SE - Fase de
+                                                    alarma 13 – 24
+                                                    p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_segunda_visita" id="estres_leve_segunda_visita"
+                                                    value="Estrés leve">
+                                                <label class="form-check-label" for="estres_leve_segunda_visita">Estrés
+                                                    leve
+                                                    25 – 36
+                                                    p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_segunda_visita" id="estres_medio_segunda_visita"
+                                                    value="Estrés medio">
+                                                <label class="form-check-label" for="estres_medio_segunda_visita">Estrés
+                                                    medio 37 – 48
+                                                    p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_segunda_visita" id="estres_alto_segunda_visita"
+                                                    value="Estrés alto">
+                                                <label class="form-check-label" for="estres_alto_segunda_visita">Estrés
+                                                    alto
+                                                    49 – 60
+                                                    p</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio"
+                                                    name="nivel_estres_segunda_visita" id="estres_grave_segunda_visita"
+                                                    value="Estrés grave">
+                                                <label class="form-check-label" for="estres_grave_segunda_visita">Estrés
+                                                    grave 61 – 72
+                                                    p</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="sugerencias_segunda_visita" class="form-label">SUGERENCIAS</label>
+                                        <textarea class="form-control" id="sugerencias_segunda_visita"
+                                            name="sugerencias_segunda_visita" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="observaciones_segunda_visita"
+                                            class="form-label">OBSERVACIONES</label>
+                                        <textarea class="form-control" id="observaciones_segunda_visita"
+                                            name="observaciones_segunda_visita" rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="firma_sello_psicologia" class="form-label">FIRMA Y SELLO DEL
+                                        PROFESIONAL</label>
+                                    <textarea class="form-control" id="firma_sello_psicologia"
+                                        name="firma_sello_psicologia" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-btn"
+                                    data-prev="evaluacionOdontologica">
+                                    <i class="fas fa-arrow-left me-1"></i> Anterior
+                                </button>
+                                <button type="button" class="btn btn-primary next-btn" data-next="evaluacionMedica">
+                                    Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evaluación Medica Tab -->
+                    <div class="tab-pane fade" id="evaluacionMedica">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-stethoscope me-2"></i> Evaluación Médica
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <h5>ANTECEDENTES PATOLÓGICOS FAMILIARES</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Familiar</th>
+                                                    <th>HTA</th>
+                                                    <th>DIABETES</th>
+                                                    <th>CANCER</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>MADRE:</td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="madre_hta" id="madre_hta_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="madre_hta_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="madre_hta" id="madre_hta_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="madre_hta_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="madre_diabetes" id="madre_diabetes_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="madre_diabetes_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="madre_diabetes" id="madre_diabetes_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="madre_diabetes_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="madre_cancer" id="madre_cancer_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="madre_cancer_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="madre_cancer" id="madre_cancer_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="madre_cancer_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>PADRE:</td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="padre_hta" id="padre_hta_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="padre_hta_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="padre_hta" id="padre_hta_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="padre_hta_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="padre_diabetes" id="padre_diabetes_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="padre_diabetes_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="padre_diabetes" id="padre_diabetes_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="padre_diabetes_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="padre_cancer" id="padre_cancer_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="padre_cancer_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="padre_cancer" id="padre_cancer_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="padre_cancer_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ABUELOS/TIOS/PRIMOS</td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="otros_hta" id="otros_hta_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="otros_hta_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="otros_hta" id="otros_hta_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="otros_hta_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="otros_diabetes" id="otros_diabetes_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="otros_diabetes_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="otros_diabetes" id="otros_diabetes_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="otros_diabetes_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="otros_cancer" id="otros_cancer_si" value="SI">
+                                                            <label class="form-check-label"
+                                                                for="otros_cancer_si">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="otros_cancer" id="otros_cancer_no" value="NO">
+                                                            <label class="form-check-label"
+                                                                for="otros_cancer_no">NO</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>FACTORES DE RIESGO CARDIOVASCULAR</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">¿Fuma actualmente algún producto de tabaco como
+                                            cigarrillos, puros o pipa o
+                                            cigarrillos electrónico?</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="fuma_actualmente_si"
+                                                    name="fuma_actualmente" value="SI">
+                                                <label class="form-check-label" for="fuma_actualmente_si">SI</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="fuma_actualmente_no"
+                                                    name="fuma_actualmente" value="NO">
+                                                <label class="form-check-label" for="fuma_actualmente_no">NO</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">¿Ud. ha dejado de fumar?</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="dejo_fumar_si"
+                                                    name="dejo_fumar" value="SI">
+                                                <label class="form-check-label" for="dejo_fumar_si">SI</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="dejo_fumar_no"
+                                                    name="dejo_fumar" value="NO">
+                                                <label class="form-check-label" for="dejo_fumar_no">NO</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tiempo_dejo_fumar" class="form-label">¿Cuánto tiempo hace que dejó
+                                            de
+                                            fumar?</label>
+                                        <input type="text" class="form-control" id="tiempo_dejo_fumar"
+                                            name="tiempo_dejo_fumar">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tratamiento_hta" class="form-label">¿Tratamiento médico actual para
+                                            la
+                                            HTA?</label>
+                                        <input type="text" class="form-control" id="tratamiento_hta"
+                                            name="tratamiento_hta">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tratamiento_dm2" class="form-label">¿Tratamiento médico actual para
+                                            DM2?</label>
+                                        <input type="text" class="form-control" id="tratamiento_dm2"
+                                            name="tratamiento_dm2">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">DISLIPIDEMIA:</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="dislipidemia_si"
+                                                    name="dislipidemia" value="SI">
+                                                <label class="form-check-label" for="dislipidemia_si">SI</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="dislipidemia_no"
+                                                    name="dislipidemia" value="NO">
+                                                <label class="form-check-label" for="dislipidemia_no">NO</label>
+                                            </div>
+                                            <small class="form-text text-muted">*CT: &lt;200 mg/dL. No-HDL: &lt; 130
+                                                mg/dL -
+                                                LDL-C: &lt; 100
+                                                mg/dL . HDL-C: V&gt;40 mg/dL - M&gt;50 mg/dL</small>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">HIPERCOLEST:</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="hipercolest_si"
+                                                    name="hipercolest" value="SI">
+                                                <label class="form-check-label" for="hipercolest_si">SI</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="hipercolest_no"
+                                                    name="hipercolest" value="NO">
+                                                <label class="form-check-label" for="hipercolest_no">NO</label>
+                                            </div>
+                                            <small class="form-text text-muted">&gt;200 mg/dL</small>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">HIPERTRIGLIC:</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="hipertriglic_si"
+                                                    name="hipertriglic" value="SI">
+                                                <label class="form-check-label" for="hipertriglic_si">SI</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="hipertriglic_no"
+                                                    name="hipertriglic" value="NO">
+                                                <label class="form-check-label" for="hipertriglic_no">NO</label>
+                                            </div>
+                                            <small class="form-text text-muted">Límite alto: 150 - 199 mg/dL Alto: 200 –
+                                                499
+                                                mg/dL Muy alto:
+                                                500 mg/dL o más</small>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tratamiento_dislipidemia" class="form-label">¿Tratamiento médico
+                                            actual?</label>
+                                        <input type="text" class="form-control" id="tratamiento_dislipidemia"
+                                            name="tratamiento_dislipidemia">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="otro_tratamiento_farmacologico" class="form-label">¿Otro tratamiento
+                                            farmacológico?</label>
+                                        <input type="text" class="form-control" id="otro_tratamiento_farmacologico"
+                                            name="otro_tratamiento_farmacologico">
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>RESULTADOS DE LABORATORIO</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="ct" class="form-label">CT:</label>
+                                            <input type="text" class="form-control" id="ct" name="ct">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="hdl" class="form-label">HDL:</label>
+                                            <input type="text" class="form-control" id="hdl" name="hdl">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="ldl" class="form-label">LDL:</label>
+                                            <input type="text" class="form-control" id="ldl" name="ldl">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="tg" class="form-label">TG:</label>
+                                            <input type="text" class="form-control" id="tg" name="tg">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="psa" class="form-label">PSA:</label>
+                                            <input type="text" class="form-control" id="psa" name="psa">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="glicemia" class="form-label">GLICEMIA:</label>
+                                            <input type="text" class="form-control" id="glicemia" name="glicemia">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="hb1ac" class="form-label">HB 1AC:</label>
+                                            <input type="text" class="form-control" id="hb1ac" name="hb1ac">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="tsh" class="form-label">TSH:</label>
+                                            <input type="text" class="form-control" id="tsh" name="tsh">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="t3" class="form-label">T3:</label>
+                                            <input type="text" class="form-control" id="t3" name="t3">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="t4" class="form-label">T4:</label>
+                                            <input type="text" class="form-control" id="t4" name="t4">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="urea" class="form-label">UREA:</label>
+                                            <input type="text" class="form-control" id="urea" name="urea">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="crea" class="form-label">CREA:</label>
+                                            <input type="text" class="form-control" id="crea" name="crea">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="glucosa_orina" class="form-label">GLUCOSA (Orina):</label>
+                                            <input type="text" class="form-control" id="glucosa_orina"
+                                                name="glucosa_orina">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="nitritos" class="form-label">NITRITOS (Orina):</label>
+                                            <input type="text" class="form-control" id="nitritos" name="nitritos">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="proteinas" class="form-label">PROTEINAS (Orina):</label>
+                                            <input type="text" class="form-control" id="proteinas" name="proteinas">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="lecucoctitos" class="form-label">LECUCOCITOS (Orina):</label>
+                                            <input type="text" class="form-control" id="lecucoctitos"
+                                                name="lecucoctitos">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>ECG</h5>
+                                    <div class="mb-3">
+                                        <label for="ecg_normal" class="form-label">Normal:</label>
+                                        <input type="text" class="form-control" id="ecg_normal" name="ecg_normal">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ecg_patologico" class="form-label">Patológico:</label>
+                                        <input type="text" class="form-control" id="ecg_patologico"
+                                            name="ecg_patologico">
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>RX DE TORAX</h5>
+                                    <div class="mb-3">
+                                        <label for="rx_torax_normal" class="form-label">Normal:</label>
+                                        <input type="text" class="form-control" id="rx_torax_normal"
+                                            name="rx_torax_normal">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="rx_torax_patologico" class="form-label">Patológico:</label>
+                                        <input type="text" class="form-control" id="rx_torax_patologico"
+                                            name="rx_torax_patologico">
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>CONTROLES PERIODICOS</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">PAP/COLPOSCOPIA:</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="pap_si"
+                                                name="pap_colposcopia" value="SI">
+                                            <label class="form-check-label" for="pap_si">SI</label>
+                                        </div>
+                                        <input type="text" class="form-control form-control-inline" id="fecha_pap"
+                                            name="fecha_pap" placeholder="Fecha" style="width: auto;">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="pap_no"
+                                                name="pap_colposcopia" value="NO">
+                                            <label class="form-check-label" for="pap_no">NO</label>
+                                        </div>
+                                        <label class="form-label ms-3">Resultado:</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="resultado_pap"
+                                                id="resultado_pap_normal" value="Normal">
+                                            <label class="form-check-label" for="resultado_pap_normal">Normal</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="resultado_pap"
+                                                id="resultado_pap_patologico" value="Patológico">
+                                            <label class="form-check-label"
+                                                for="resultado_pap_patologico">Patológico</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">MAMOGRAFIA:</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="mamografia_si"
+                                                name="mamografia" value="SI">
+                                            <label class="form-check-label" for="mamografia_si">SI</label>
+                                        </div>
+                                        <input type="text" class="form-control form-control-inline"
+                                            id="fecha_mamografia" name="fecha_mamografia" placeholder="Fecha"
+                                            style="width: auto;">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="mamografia_no"
+                                                name="mamografia" value="NO">
+                                            <label class="form-check-label" for="mamografia_no">NO</label>
+                                        </div>
+                                        <label class="form-label ms-3">Resultado:</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="resultado_mamografia"
+                                                id="resultado_mamografia_normal" value="Normal">
+                                            <label class="form-check-label"
+                                                for="resultado_mamografia_normal">Normal</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="resultado_mamografia"
+                                                id="resultado_mamografia_patologico" value="Patológico">
+                                            <label class="form-check-label"
+                                                for="resultado_mamografia_patologico">Patológico</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">ECOGRAFIA PROSTÁTICA:</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="ecografia_prostatica_si"
+                                                name="ecografia_prostatica" value="SI">
+                                            <label class="form-check-label" for="ecografia_prostatica_si">SI</label>
+                                        </div>
+                                        <input type="text" class="form-control form-control-inline"
+                                            id="fecha_ecografia_prostatica" name="fecha_ecografia_prostatica"
+                                            placeholder="Fecha" style="width: auto;">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="ecografia_prostatica_no"
+                                                name="ecografia_prostatica" value="NO">
+                                            <label class="form-check-label" for="ecografia_prostatica_no">NO</label>
+                                        </div>
+                                        <label for="peso_prostatica" class="form-label ms-3">Peso</label>
+                                        <input type="text" class="form-control form-control-inline" id="peso_prostatica"
+                                            name="peso_prostatica" style="width: auto;">
+                                        <label for="residuo_postmiccional" class="form-label ms-3">Residuo
+                                            postmiccional</label>
+                                        <input type="text" class="form-control form-control-inline"
+                                            id="residuo_postmiccional" name="residuo_postmiccional"
+                                            style="width: auto;"> ml
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>DERIVACIÓN</h5>
+                                    <textarea class="form-control" name="derivacion" rows="5"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="firma_sello_medica" class="form-label">FIRMA Y SELLO DEL
+                                        PROFESIONAL</label>
+                                    <textarea class="form-control" id="firma_sello_medica" name="firma_sello_medica"
+                                        rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-btn"
+                                    data-prev="evaluacionPsicologica">
+                                    <i class="fas fa-arrow-left me-1"></i> Anterior
+                                </button>
+                                <button type="button" class="btn btn-primary next-btn" data-next="otraEvaluacion">
+                                    Siguiente <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de reportes (oculta inicialmente) -->
+            <div id="reportSection" class="mt-4" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-2"></i> Reportes
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <canvas id="sexChart"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="ageChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <button id="downloadDBBtn" class="btn btn-primary">
+                                <i class="fas fa-download me-2"></i> Descargar Base de Datos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Botón flotante para volver al index -->
+        <a href="index.html" class="floating-home-btn">
+            <i class="fas fa-home"></i>
+        </a>
     </div>
-    -->
-    <!-- Formularios -->
-    <div class="container">
-        <div class="row" id="formulariosContainer">
-            <!-- Formulario 1: Pre-Consulta Adultos Mayores -->
-            <div class="col-lg-4 col-md-6" data-categories="preconsulta evaluacion">
-                <div class="card card-formulario">
-                    <img src="https://cdn-icons-png.flaticon.com/512/471/471241.png" class="card-img-top"
-                        alt="Adulto mayor">
-                    <div class="card-body">
-                        <h5 class="card-title">Pre-Consulta Adultos Mayores</h5>
-                        <p class="card-text">Evaluación integral para pacientes geriátricos que incluye actividades de
-                            la vida diaria, deterioro cognitivo y factores de riesgo. Basado en los parámteros de la
-                            Dirección de Medicina Preventiva del Instituto de Previsión Social - Paraguay</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Geriatría</span>
-                            <span class="badge badge-categoria">Pre-Consulta</span>
-                        </div>
-                        <a href="pre_consulta.html" class="btn btn-primary-custom text-white">Ver
-                            formulario</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-1">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Formulario 2: Evaluación Cardiovascular -->
-            <div class="col-lg-4 col-md-6" data-categories="evaluacion especialidad">
-                <div class="card card-formulario">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3696/3696554.png" class="card-img-top"
-                        alt="Corazón">
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SQL.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-                    <div class="card-body">
-                        <h5 class="card-title">Evaluación Cardiovascular</h5>
-                        <p class="card-text">Formulario completo para evaluación de factores de riesgo cardiovascular
-                            según Life's Essential 8 de la AHA.</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Cardiología</span>
-                            <span class="badge badge-categoria">Prevención</span>
-                        </div>
-                        <a href="analisis_riesgo.html" class="btn btn-primary-custom text-white">Ver
-                            formulario</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-2">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Previbus -->
-            <div class="col-lg-4 col-md-6" data-categories="previbus">
-                <div class="card card-formulario card-reporte">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3303/3303893.png" class="card-img-top"
-                        alt="Previbus - Generación de Reportes y Análisis">
-                    <div class="card-body">
-                        <h5 class="card-title">Previbus - Reportes y Análisis Inteligente</h5>
-                        <p class="card-text">Este formulario Previbus permite la recopilación de datos para la
-                            generación de reportes detallados y respaldos estratégicos. Facilita el análisis con
-                            herramientas de Business Intelligence, la creación de informes en formato PDF y la
-                            exportación de datos a Excel, optimizando la toma de decisiones informada.</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Reportes Gerenciales</span>
-                            <span class="badge badge-categoria">Análisis de Datos</span>
-                            <span class="badge badge-categoria">Business Intelligence</span>
-                            <span class="badge badge-categoria">Exportación de Datos</span>
-                        </div>
-                        <a href="previbus_reportes.html" class="btn btn-primary-custom text-white">Generar Reportes</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-previbus-reportes">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Formulario 3: Seguimiento Diabetes -->
-            <div class="col-lg-4 col-md-6" data-categories="seguimiento especialidad">
-                <div class="card card-formulario">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3461/3461668.png" class="card-img-top"
-                        alt="Diabetes">
-                    <div class="card-body">
-                        <h5 class="card-title">Pre Consulta basado en </h5>
-                        <p class="card-text">Formulario de Relevamiento de Datos de Datos Generales: signos vitales,
-                            evaluación clínica, estilo de Vida, exámenes, consejería, seguimiento</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Enfemería</span>
-                            <span class="badge badge-categoria">Seguimiento</span>
-                        </div>
-                        <a href="historia_clinica.html" class="btn btn-primary-custom text-white">Ver formulario</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-3">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Formulario 4: Evaluación de Salud Mental -->
-            <div class="col-lg-4 col-md-6" data-categories="evaluacion especialidad">
-                <div class="card card-formulario">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2942/2942789.png" class="card-img-top"
-                        alt="Salud mental">
-                    <div class="card-body">
-                        <h5 class="card-title">Evaluación de Salud Mental</h5>
-                        <p class="card-text">Cuestionario para detección de depresión, ansiedad y estrés en pacientes
-                            adultos.</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Psiquiatría</span>
-                            <span class="badge badge-categoria">Detección</span>
-                        </div>
-                        <a href="evaluacion_salud_mental.html" class="btn btn-primary-custom text-white">Ver
-                            formulario</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-4">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Formulario 5: Pre-Consulta Pediátrica -->
-            <div class="col-lg-4 col-md-6" data-categories="preconsulta especialidad">
-                <div class="card card-formulario">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3345/3345397.png" class="card-img-top" alt="Niño">
-                    <div class="card-body">
-                        <h5 class="card-title">Pre-Consulta Pediátrica</h5>
-                        <p class="card-text">Formulario para evaluación inicial de pacientes pediátricos, incluyendo
-                            desarrollo y antecedentes.</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Pediatría</span>
-                            <span class="badge badge-categoria">Pre-Consulta</span>
-                        </div>
-                        <a href="pre_consulta_pediatrica.html" class="btn btn-primary-custom text-white">Ver
-                            formulario</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-5">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Formulario 6: Seguimiento COVID-19 -->
-            <div class="col-lg-4 col-md-6" data-categories="seguimiento">
-                <div class="card card-formulario">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2785/2785407.png" class="card-img-top"
-                        alt="COVID-19">
-                    <div class="card-body">
-                        <h5 class="card-title">Seguimiento Post-COVID</h5>
-                        <p class="card-text">Evaluación de síntomas persistentes y complicaciones en pacientes
-                            recuperados de COVID-19.</p>
-                        <div class="mb-3">
-                            <span class="badge badge-categoria">Medicina General</span>
-                            <span class="badge badge-categoria">Seguimiento</span>
-                        </div>
-                        <a href="seguimiento_covid.html" class="btn btn-primary-custom text-white">Ver formulario</a>
-                        <div class="rating-container">
-                            <div class="rating-stars">
-                                <i class="fas fa-star" data-rating="1"></i>
-                                <i class="fas fa-star" data-rating="2"></i>
-                                <i class="fas fa-star" data-rating="3"></i>
-                                <i class="fas fa-star" data-rating="4"></i>
-                                <i class="fas fa-star" data-rating="5"></i>
-                            </div>
-                            <div class="rating-count" id="ratingCount-6">(0 votos)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!---- Perfil -->
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-12">
-                <div class="profile-card p-4"
-                    style="background-color: white; border-radius: 15px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-                    <h2 class="text-center mb-4">Sobre el autor de los Formularios</h2>
-                    <div class="profile-content">
-                        <p>
-                            Soy Julio Franco, licenciado en Filosofía con postgrado en Didáctica
-                            Universitaria.
-                            Profesor Elemental de Música con énfasis en Violoncello. Estoy comprometido con la formación
-                            integral a través del
-                            arte y el pensamiento crítico. Actualmente, desempeño funciones docentes en el Instituto
-                            Superior Nacional de Música,
-                            donde imparto la Cátedra de Historia de la Música Paraguaya, Introducción a la Filosofía y
-                            el curso de Violoncello Introductorio. Además, me desempeño como especialista en
-                            Inteligencia de Datos en la Dirección de Medicina Preventiva del Instituto de Previsión
-                            Social (IPS) , donde lidero investigaciones orientadas a optimizar la atención médica y los
-                            servicios ofrecidos a los asegurados. Utilizo herramientas avanzadas de análisis de datos e
-                            inteligencia de negocios para generar insights estratégicos que impulsen la toma de
-                            decisiones basada en tecnología y evidencia.
-                        </p>
-                        <p>
-                            Como multinstrumentista y fundador de la
-                            <a href="https://ipuparaguay.org" target="_blank"
-                                class="text-decoration-none text-primary fw-bold">Orquesta Filarmónica Ipu Paraguay</a>,
-                            he cultivado una amplia trayectoria en el ámbito musical, actuando también como arreglador,
-                            orquestador y compositor. Entre mis experiencias destacadas
-                            se encuentra la dirección de la orquesta en obras emblemáticas, como la zarzuela paraguaya
-                            <em>María Pacuri</em>,
-                            y la coordinación de proyectos musicales en el Teatro Municipal Ignacio A. Pane. Tuve el
-                            honor de trabajar en los arreglos orquestales del
-                            <a href="https://youtube.com/playlist?list=PLwyUtCKRMxQGeKzDvpB1dGNUgneqX6p_B&si=FX2ZYxR9HoIYb4zJ"
-                                target="_blank" class="text-decoration-none text-primary fw-bold">
-                                Proyecto Beatles Sinfónico en el año 2024, con 13 transcripciones de algunas icónicas
-                                piezas de la Banda de Liverpool.</a>
-                        </p>
-                        <p>
-                            Además de mi pasión por la música, soy apasionado de la investigación en tecnología,
-                            desarrollando competencias en lenguajes de programación
-                            como PHP, Python, C, C#, Java y trabajando en el desarrollo de software en varios proyectos.
-                            Esta combinación de habilidades artísticas y tecnológicas
-                            me permite abordar los desafíos desde una perspectiva multidisciplinaria, promoviendo
-                            siempre la innovación y la excelencia en la formación de mis estudiantes.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!---- Agradecimientos -->
-    <div class="container">
-        <div class="mt-5">
-            <h3 class="text-center mb-4">Créditos y Agradecimientos</h3>
-            <div class="row justify-content-center">
-                <!-- Card 1: Gemini -->
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <img src="https://www.gstatic.com/images/branding/product/2x/gemini_48dp.png"
-                                alt="Gemini Logo" class="mb-3" style="width: 60px; height: auto;">
-                            <h5 class="card-title">Gemini</h5>
-                            <p class="card-text small">
-                                Agradecemos a <strong>Gemini</strong>, una inteligencia artificial avanzada de Google,
-                                por su contribución en el desarrollo de los formularios.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: GROK -->
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <!-- URL alternativa para el logo de GROK -->
-                            <img src="https://static.cdnlogo.com/logos/g/45/grok.svg" alt="GROK Logo" class="mb-3"
-                                style="width: 60px; height: auto;">
-                            <h5 class="card-title">GROK</h5>
-                            <p class="card-text small">
-                                Agradecemos a <strong>GROK</strong>, una IA desarrollada por xAI, por su colaboración en
-                                la creación de estas herramientas.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Qwen -->
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <!-- Logo oficial de Qwen -->
-                            <img src="https://assets.alicdn.com/g/qwenweb/qwen-webui-fe/0.0.65/static/qwen_row_text_icon_light_540.png"
-                                alt="Qwen Logo" class="mb-3" style="width: 60px; height: auto;">
-                            <h5 class="card-title">Qwen</h5>
-                            <p class="card-text small">
-                                Agradecemos a <strong>Qwen</strong>, una IA desarrollada por Alibaba Cloud, por su
-                                valiosa contribución en este proyecto.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer text-center">
-        <div class="container">
-            <h3>Portafolio de Formularios Médicos</h3>
-            <p>Herramientas digitales para mejorar la atención al paciente</p>
-            <div class="mt-3">
-                <a href="https://www.facebook.com/jucfra" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://x.com/juliofrancobaez" class="text-white mx-2"><i class="fab fa-twitter"></i></a>
-                <a href="www.linkedin.com/in/jufrancopy" class="text-white mx-2"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/jufrancopy" class="text-white mx-2"><i class="fab fa-github"></i></a>
-            </div>
-            <p class="mt-3 mb-0">© 2025 Todos los derechos reservados</p>
-        </div>
-    </footer>
-
-    <!-- Botón flotante -->
-    <a href="#" class="floating-btn">
-        <i class="fas fa-plus"></i>
-    </a>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Sistema de votación
-        document.querySelectorAll('.rating-stars i').forEach(star => {
-            star.addEventListener('click', function () {
-                const card = this.closest('.card-formulario');
-                const formId = Array.from(document.querySelectorAll('.card-formulario')).indexOf(card) + 1;
-                const rating = parseInt(this.getAttribute('data-rating'));
+        // Variables globales
+        let db;
+        let currentCI = null;
 
-                // Guardar la votación (simulación)
-                const ip = 'guest'; // En un entorno real, obtendríamos la IP del usuario
-                const ratings = JSON.parse(localStorage.getItem('formRatings') || {};
-                ratings[formId] = ratings[formId] || {};
-
-                // Verificar si ya votó
-                if (ratings[formId][ip]) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Ya votaste',
-                        text: 'Solo puedes votar una vez por formulario.',
-                        confirmButtonColor: '#0f6f61'
-                    });
-                    return;
-                }
-
-                // Registrar voto
-                ratings[formId][ip] = rating;
-                localStorage.setItem('formRatings', JSON.stringify(ratings));
-
-                // Actualizar visualización
-                updateRatingDisplay(formId);
-
-                // Mostrar confirmación
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Voto registrado!',
-                    text: `Has calificado este formulario con ${rating} estrellas.`,
-                    confirmButtonColor: '#0f6f61'
+        // Inicialización de la base de datos SQL.js
+        const initSQL = async () => {
+            try {
+                const SQL = await initSqlJs({
+                    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
                 });
-            });
-        });
 
-        // Función para actualizar la visualización de votos
-        function updateRatingDisplay(formId) {
-            const ratings = JSON.parse(localStorage.getItem('formRatings')) || {};
-            const formRatings = ratings[formId] || {};
-
-            // Calcular promedio
-            const votes = Object.values(formRatings);
-            const totalVotes = votes.length;
-            const averageRating = totalVotes > 0 ?
-                (votes.reduce((a, b) => a + b, 0) / totalVotes).toFixed(1) : 0;
-
-            // Actualizar contador
-            document.getElementById(`ratingCount-${formId}`).textContent =
-                `(${totalVotes} ${totalVotes === 1 ? 'voto' : 'votos'})`;
-
-            // Actualizar estrellas (solo para visualización)
-            const starsContainer = document.querySelectorAll('.card-formulario')[formId - 1]
-                .querySelector('.rating-stars');
-
-            starsContainer.querySelectorAll('i').forEach((star, index) => {
-                if (index < Math.floor(averageRating)) {
-                    star.classList.add('fas');
-                    star.classList.remove('far');
+                // Cargar base de datos desde localStorage si existe
+                const savedDB = localStorage.getItem('previbusDB');
+                if (savedDB) {
+                    const buffer = Uint8Array.from(atob(savedDB), c => c.charCodeAt(0));
+                    db = new SQL.Database(buffer);
                 } else {
-                    star.classList.add('far');
-                    star.classList.remove('fas');
+                    db = new SQL.Database();
+
+                    db.run(`
+                        CREATE TABLE IF NOT EXISTS empleados (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            ci TEXT UNIQUE NOT NULL,
+                            nombre_completo TEXT,
+                            nombre_empresa TEXT,
+                            actividad_rubro TEXT,
+                            fecha_primera_visita TEXT,
+                            fecha_segunda_visita TEXT,
+                            antiguedad_empresarial TEXT,
+                            telefono TEXT,
+                            localidad TEXT,
+                            fecha_nacimiento TEXT,
+                            edad INTEGER,
+                            sexo TEXT CHECK(sexo IN ('M', 'F')),
+                            
+                            -- Campos de enfermería
+                            pa TEXT,
+                            fr TEXT,
+                            fc TEXT,
+                            antecedente_cardiaco TEXT CHECK(antecedente_cardiaco IN ('SI', 'NO')),
+                            diagnostico_hta TEXT CHECK(diagnostico_hta IN ('SI', 'NO')),
+                            tiempo_hta TEXT,
+                            medicacion_regular TEXT CHECK(medicacion_regular IN ('SI', 'NO')),
+                            hiperglicemia TEXT CHECK(hiperglicemia IN ('SI', 'NO')),
+                            tiempo_hiperglicemia TEXT,
+                            tratamiento_hiperglicemia TEXT CHECK(tratamiento_hiperglicemia IN ('SI', 'NO')),
+                            firma_sello_enfermeria TEXT,
+                            
+                            fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP,
+                            fecha_actualizacion TEXT
+                        );
+                        
+                        CREATE INDEX IF NOT EXISTS idx_empleados_ci ON empleados(ci);
+                    `);
                 }
+
+                console.log("Base de datos SQLite inicializada correctamente");
+
+                // Cargar último CI usado si existe
+                currentCI = localStorage.getItem('previbusLastCI');
+                if (currentCI) {
+                    document.getElementById('n_ci').value = currentCI;
+                }
+
+                // Cargar última pestaña activa
+                const lastTab = localStorage.getItem('previbusLastTab') || 'datosGenerales';
+                document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('show', 'active'));
+                document.getElementById(lastTab).classList.add('show', 'active');
+                updateProgressSteps(lastTab);
+
+            } catch (err) {
+                console.error("Error al inicializar SQL.js:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error crítico',
+                    text: 'No se pudo inicializar la base de datos local',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        };
+
+        // Función para guardar el estado de la base de datos
+        function saveDatabase() {
+            if (!db) return;
+
+            try {
+                const data = db.export();
+                const binaryString = String.fromCharCode.apply(null, data);
+                const base64 = btoa(binaryString);
+                localStorage.setItem('previbusDB', base64);
+
+                if (currentCI) {
+                    localStorage.setItem('previbusLastCI', currentCI);
+                }
+
+                // Guardar pestaña activa
+                const activeTab = document.querySelector('.tab-pane.show.active')?.id;
+                if (activeTab) {
+                    localStorage.setItem('previbusLastTab', activeTab);
+                }
+            } catch (err) {
+                console.error("Error al guardar base de datos:", err);
+            }
+        }
+
+        // Función para habilitar el botón siguiente
+        function enableNextButton(currentBlock) {
+            const nextButton = document.querySelector(`#${currentBlock} .next-btn`);
+            if (nextButton) {
+                nextButton.disabled = false;
+                nextButton.classList.remove('btn-secondary');
+                nextButton.classList.add('btn-success');
+            }
+        }
+
+        // Función para mostrar errores de validación
+        function showValidationError(message, element) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validación',
+                text: message,
+                didClose: () => element?.focus()
             });
         }
 
-        // Inicializar visualización de votos
-        for (let i = 1; i <= 6; i++) {
-            updateRatingDisplay(i);
+        // Validación del bloque de datos personales
+        function datosGenerales() {
+            const requiredFields = [
+                { id: 'n_ci', message: 'El número de CI es obligatorio' },
+                { id: 'nombre_apellido', message: 'El nombre completo es obligatorio' },
+                { id: 'fecha_nacimiento', message: 'La fecha de nacimiento es obligatoria' },
+                { id: 'telefono', message: 'El teléfono es obligatorio' }
+            ];
+
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (!element?.value.trim()) {
+                    showValidationError(field.message, element);
+                    return false;
+                }
+            }
+
+            if (!document.querySelector('input[name="sexo"]:checked')) {
+                showValidationError('Debe seleccionar el sexo', document.querySelector('input[name="sexo"]'));
+                return false;
+            }
+
+            return true;
         }
 
-        // Filtro por categorías
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                // Actualizar botones activos
-                document.querySelectorAll('.category-btn').forEach(b => {
-                    b.classList.remove('active-category');
-                });
-                this.classList.add('active-category');
+        // Validación del bloque de enfermería
+        function validateEnfermeriaData() {
+            const requiredFields = [
+                { id: 'pa', message: 'La presión arterial es obligatoria', regex: /^\d{2,3}\/\d{2,3}$/ },
+                { id: 'fr', message: 'La frecuencia respiratoria es obligatoria', regex: /^\d+$/ },
+                { id: 'fc', message: 'La frecuencia cardíaca es obligatoria', regex: /^\d+$/ }
+            ];
 
-                const category = this.getAttribute('data-category');
-                const cards = document.querySelectorAll('.col-lg-4.col-md-6');
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                const value = element?.value.trim();
 
-                cards.forEach(card => {
-                    if (category === 'all' || card.getAttribute('data-categories').includes(category)) {
-                        card.style.display = 'block';
+                if (!value) {
+                    showValidationError(field.message, element);
+                    return false;
+                }
+
+                if (field.regex && !field.regex.test(value)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Formato incorrecto',
+                        text: `${field.message} (Formato requerido: ${field.regex.toString()})`,
+                        didClose: () => element.focus()
+                    });
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Función para guardar un bloque específico
+        async function saveBlock(blockName) {
+            if (!db) {
+                Swal.fire('Error', 'Base de datos no inicializada', 'error');
+                return false;
+            }
+
+            try {
+                const ci = document.getElementById('n_ci').value.trim();
+                if (!ci) {
+                    Swal.fire('Error', 'El número de CI es obligatorio', 'error');
+                    return false;
+                }
+
+                currentCI = ci;
+                let updateFields = '';
+                let params = [];
+
+                switch (blockName) {
+                    case 'datosGenerales':
+                        if (!datosGenerales()) return false;
+                        updateFields = `
+                            nombre_completo = ?, 
+                            sexo = ?, 
+                            fecha_nacimiento = ?, 
+                            edad = ?, 
+                            telefono = ?, 
+                            localidad = ?,
+                            nombre_empresa = ?, 
+                            actividad_rubro = ?, 
+                            antiguedad_empresarial = ?,
+                            fecha_primera_visita = ?, 
+                            fecha_segunda_visita = ?
+                        `;
+                        params = [
+                            document.getElementById('nombre_apellido').value.trim(),
+                            document.querySelector('input[name="sexo"]:checked')?.value,
+                            document.getElementById('fecha_nacimiento').value,
+                            document.getElementById('edad').value,
+                            document.getElementById('telefono').value.trim(),
+                            document.getElementById('localidad').value.trim(),
+                            document.getElementById('nombre_empresa').value.trim(),
+                            document.getElementById('actividad_rubro').value.trim(),
+                            document.getElementById('antiguedad_empresarial').value.trim(),
+                            document.getElementById('fecha_turno_primera_visita').value,
+                            document.getElementById('fecha_turno_segunda_visita').value
+                        ];
+                        break;
+
+                    case 'evaluacionEnfermeria':
+                        if (!validateEnfermeriaData()) return false;
+                        updateFields = `
+                            pa = ?, 
+                            fr = ?, 
+                            fc = ?, 
+                            antecedente_cardiaco = ?, 
+                            diagnostico_hta = ?, 
+                            tiempo_hta = ?, 
+                            medicacion_regular = ?, 
+                            hiperglicemia = ?, 
+                            tiempo_hiperglicemia = ?, 
+                            tratamiento_hiperglicemia = ?, 
+                            firma_sello_enfermeria = ?
+                        `;
+                        params = [
+                            document.getElementById('pa').value.trim(),
+                            document.getElementById('fr').value.trim(),
+                            document.getElementById('fc').value.trim(),
+                            document.querySelector('input[name="antecedente_cardiaco"]:checked')?.value,
+                            document.querySelector('input[name="diagnostico_hta"]:checked')?.value,
+                            document.getElementById('tiempo_hta').value.trim(),
+                            document.querySelector('input[name="medicacion_regular"]:checked')?.value,
+                            document.querySelector('input[name="hiperglicemia"]:checked')?.value,
+                            document.getElementById('tiempo_hiperglicemia').value.trim(),
+                            document.querySelector('input[name="tratamiento_hiperglicemia"]:checked')?.value,
+                            document.getElementById('firma_sello_enfermeria').value.trim()
+                        ];
+                        break;
+                }
+
+                // Verificar si ya existe un registro con este CI
+                const exists = db.exec(`SELECT 1 FROM empleados WHERE ci = ?`, [ci]);
+
+                if (exists[0]?.values.length > 0) {
+                    // Actualizar bloque existente
+                    db.run(`
+                        UPDATE empleados 
+                        SET ${updateFields}, fecha_actualizacion = CURRENT_TIMESTAMP
+                        WHERE ci = ?
+                    `, [...params, ci]);
+                } else {
+                    // Insertar nuevo registro (solo si es el primer bloque)
+                    if (blockName === 'datosGenerales') {
+                        db.run(`
+                            INSERT INTO empleados (
+                                ci, ${updateFields.split(',').map(f => f.split('=')[0].trim()).join(', ')}
+                            ) VALUES (?, ${params.map(() => '?').join(', ')})
+                        `, [ci, ...params]);
                     } else {
-                        card.style.display = 'none';
+                        Swal.fire('Error', 'Debe completar primero los datos personales', 'error');
+                        return false;
+                    }
+                }
+
+                // Guardar cambios en localStorage
+                saveDatabase();
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Datos guardados',
+                    text: `Bloque ${blockName} guardado correctamente`,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                // Habilitar el botón siguiente
+                enableNextButton(blockName);
+                return true;
+
+            } catch (err) {
+                console.error(`Error al guardar bloque ${blockName}:`, err);
+                Swal.fire('Error', `Error al guardar: ${err.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Función para cargar datos de un bloque
+        function loadBlockData(tabId) {
+            if (!currentCI) return;
+
+            try {
+                const result = db.exec(`SELECT * FROM empleados WHERE ci = ?`, [currentCI]);
+                if (!result[0] || result[0].values.length === 0) return;
+
+                const data = result[0].values[0];
+                const columns = result[0].columns;
+
+                switch (tabId) {
+                    case 'datosGenerales':
+                        document.getElementById('nombre_apellido').value = data[columns.indexOf('nombre_completo')] || '';
+                        setRadioValue('sexo', data[columns.indexOf('sexo')]);
+                        document.getElementById('fecha_nacimiento').value = data[columns.indexOf('fecha_nacimiento')] || '';
+                        document.getElementById('edad').value = data[columns.indexOf('edad')] || '';
+                        document.getElementById('telefono').value = data[columns.indexOf('telefono')] || '';
+                        document.getElementById('localidad').value = data[columns.indexOf('localidad')] || '';
+                        break;
+
+                    case 'datosLaborales':
+                        document.getElementById('nombre_empresa').value = data[columns.indexOf('nombre_empresa')] || '';
+                        document.getElementById('actividad_rubro').value = data[columns.indexOf('actividad_rubro')] || '';
+                        document.getElementById('antiguedad_empresarial').value = data[columns.indexOf('antiguedad_empresarial')] || '';
+                        break;
+
+                    case 'visitas':
+                        document.getElementById('fecha_turno_primera_visita').value = data[columns.indexOf('fecha_primera_visita')] || '';
+                        document.getElementById('fecha_turno_segunda_visita').value = data[columns.indexOf('fecha_segunda_visita')] || '';
+                        break;
+
+                    case 'evaluacionEnfermeria':
+                        document.getElementById('pa').value = data[columns.indexOf('pa')] || '';
+                        document.getElementById('fr').value = data[columns.indexOf('fr')] || '';
+                        document.getElementById('fc').value = data[columns.indexOf('fc')] || '';
+                        setRadioValue('antecedente_cardiaco', data[columns.indexOf('antecedente_cardiaco')]);
+                        setRadioValue('diagnostico_hta', data[columns.indexOf('diagnostico_hta')]);
+                        document.getElementById('tiempo_hta').value = data[columns.indexOf('tiempo_hta')] || '';
+                        setRadioValue('medicacion_regular', data[columns.indexOf('medicacion_regular')]);
+                        setRadioValue('hiperglicemia', data[columns.indexOf('hiperglicemia')]);
+                        document.getElementById('tiempo_hiperglicemia').value = data[columns.indexOf('tiempo_hiperglicemia')] || '';
+                        setRadioValue('tratamiento_hiperglicemia', data[columns.indexOf('tratamiento_hiperglicemia')]);
+                        document.getElementById('firma_sello_enfermeria').value = data[columns.indexOf('firma_sello_enfermeria')] || '';
+                        break;
+                }
+            } catch (err) {
+                console.error("Error al cargar bloque:", err);
+            }
+        }
+
+        // Función auxiliar para establecer valores de radio buttons
+        function setRadioValue(name, value) {
+            if (!value) return;
+            const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (radio) radio.checked = true;
+        }
+
+        // Actualizar pasos de progreso
+        function updateProgressSteps(activeTabId) {
+            const steps = document.querySelectorAll('.progress-step');
+            let activeFound = false;
+
+            steps.forEach(step => {
+                const stepTab = step.getAttribute('data-tab');
+                step.classList.remove('active', 'completed');
+
+                if (stepTab === activeTabId) {
+                    step.classList.add('active');
+                    activeFound = true;
+                } else if (!activeFound) {
+                    step.classList.add('completed');
+                }
+            });
+
+            // Actualizar barra de progreso
+            const activeIndex = Array.from(steps).findIndex(s => s.classList.contains('active'));
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                const percent = (activeIndex / (steps.length - 1)) * 100;
+                progressBar.style.width = `${percent}%`;
+            }
+        }
+
+        // Configurar eventos de navegación
+        function setupNavigation() {
+            document.querySelectorAll('.next-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const currentTab = this.closest('.tab-pane');
+                    const nextTabId = this.getAttribute('data-next');
+
+                    currentTab.classList.remove('show', 'active');
+                    document.getElementById(nextTabId).classList.add('show', 'active');
+                    updateProgressSteps(nextTabId);
+
+                    if (currentCI) {
+                        loadBlockData(nextTabId);
+                    }
+
+                    // Guardar pestaña activa
+                    localStorage.setItem('previbusLastTab', nextTabId);
+                });
+            });
+
+            document.querySelectorAll('.prev-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const currentTab = this.closest('.tab-pane');
+                    const prevTabId = this.getAttribute('data-prev');
+
+                    currentTab.classList.remove('show', 'active');
+                    document.getElementById(prevTabId).classList.add('show', 'active');
+                    updateProgressSteps(prevTabId);
+
+                    // Guardar pestaña activa
+                    localStorage.setItem('previbusLastTab', prevTabId);
+                });
+            });
+        }
+
+        // Configurar eventos de guardado
+        function setupSaveButtons() {
+            document.getElementById('guardarDatosPersonales')?.addEventListener('click', () => saveBlock('datosGenerales'));
+            // document.getElementById('guardarDatosLaborales')?.addEventListener('click', () => saveBlock('datosLaborales'));
+            document.getElementById('guardarVisitas')?.addEventListener('click', () => saveBlock('visitas'));
+            document.getElementById('guardarEnfermeria')?.addEventListener('click', () => saveBlock('evaluacionEnfermeria'));
+        }
+
+        // Configurar campos condicionales
+        function setupConditionalFields() {
+            // HTA
+            document.querySelectorAll('input[name="diagnostico_hta"]').forEach(radio => {
+                radio.addEventListener('change', function () {
+                    document.getElementById('tiempo_hta_container').style.display =
+                        this.value === 'SI' ? 'block' : 'none';
+                    if (this.value !== 'SI') {
+                        document.getElementById('tiempo_hta').value = '';
                     }
                 });
             });
-        });
 
-        // Búsqueda
-        document.getElementById('searchInput').addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase();
-            const cards = document.querySelectorAll('.card-formulario');
-
-            cards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                const text = card.querySelector('.card-text').textContent.toLowerCase();
-
-                if (title.includes(searchTerm) || text.includes(searchTerm)) {
-                    card.closest('.col-lg-4.col-md-6').style.display = 'block';
-                } else {
-                    card.closest('.col-lg-4.col-md-6').style.display = 'none';
-                }
+            // Hiperglicemia
+            document.querySelectorAll('input[name="hiperglicemia"]').forEach(radio => {
+                radio.addEventListener('change', function () {
+                    document.getElementById('tiempo_hiperglicemia_container').style.display =
+                        this.value === 'SI' ? 'block' : 'none';
+                    if (this.value !== 'SI') {
+                        document.getElementById('tiempo_hiperglicemia').value = '';
+                    }
+                });
             });
-        });
+        }
 
-        // Botón flotante (simulación)
-        document.querySelector('.floating-btn').addEventListener('click', function (e) {
-            e.preventDefault();
+        // Función para formatear fecha
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES');
+        }
+
+        // Nueva función para generar PDF con todos los registros
+        const generatePDF = async () => {
+            try {
+                // Cargar jsPDF dinámicamente si no está disponible
+                if (typeof window.jspdf === 'undefined') {
+                    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+                    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js');
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Configuración inicial del documento
+                doc.setFontSize(16);
+                doc.setTextColor(40, 40, 40);
+                doc.text('LISTADO GENERAL DE EMPLEADOS - PREVIBUS', 105, 20, { align: 'center' });
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text(`Generado el: ${new Date().toLocaleDateString()}`, 105, 27, { align: 'center' });
+
+                // Obtener todos los registros ordenados por fecha
+                const result = db.exec(`
+            SELECT 
+                ci,
+                nombre_completo,
+                nombre_empresa,
+                fecha_primera_visita,
+                fecha_segunda_visita,
+                fecha_registro,
+                fecha_actualizacion
+            FROM empleados
+            ORDER BY fecha_registro DESC
+        `);
+
+                if (!result[0] || result[0].values.length === 0) {
+                    Swal.fire('Información', 'No hay registros para generar el reporte', 'info');
+                    return;
+                }
+
+                const columns = result[0].columns;
+                const registros = result[0].values;
+
+                // Preparar datos para la tabla
+                const tableData = registros.map(registro => {
+                    return {
+                        ci: registro[columns.indexOf('ci')],
+                        nombre: registro[columns.indexOf('nombre_completo')],
+                        empresa: registro[columns.indexOf('nombre_empresa')] || 'Sin especificar',
+                        primeraVisita: formatDate(registro[columns.indexOf('fecha_primera_visita')]) || 'No programada',
+                        segundaVisita: formatDate(registro[columns.indexOf('fecha_segunda_visita')]) || 'No programada',
+                        registro: formatDateTime(registro[columns.indexOf('fecha_registro')]),
+                        actualizacion: formatDateTime(registro[columns.indexOf('fecha_actualizacion')]) || 'Sin actualizar'
+                    };
+                });
+
+                // Configuración de la tabla principal
+                doc.autoTable({
+                    startY: 35,
+                    head: [
+                        [
+                            'CI',
+                            'Nombre',
+                            'Empresa',
+                            '1° Visita',
+                            '2° Visita',
+                            'Fecha Registro',
+                            'Última Actualización'
+                        ]
+                    ],
+                    body: tableData.map(item => [
+                        item.ci,
+                        item.nombre,
+                        item.empresa,
+                        item.primeraVisita,
+                        item.segundaVisita,
+                        item.registro,
+                        item.actualizacion
+                    ]),
+                    headStyles: {
+                        fillColor: [41, 128, 185],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    margin: { left: 10, right: 10 },
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 2,
+                        overflow: 'linebreak'
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 18 }, // CI
+                        1: { cellWidth: 35 }, // Nombre
+                        2: { cellWidth: 30 }, // Empresa
+                        3: { cellWidth: 20 }, // 1° Visita
+                        4: { cellWidth: 20 }, // 2° Visita
+                        5: { cellWidth: 25 }, // Registro
+                        6: { cellWidth: 25 }  // Actualización
+                    }
+                });
+
+                // Estadísticas al final
+                const totalRegistros = registros.length;
+                const conPrimeraVisita = registros.filter(r => r[columns.indexOf('fecha_primera_visita')]).length;
+                const conSegundaVisita = registros.filter(r => r[columns.indexOf('fecha_segunda_visita')]).length;
+
+                doc.setFontSize(10);
+                doc.setTextColor(40, 40, 40);
+                doc.text(`Total registros: ${totalRegistros}`, 14, doc.lastAutoTable.finalY + 15);
+                doc.text(`Con primera visita: ${conPrimeraVisita} (${Math.round((conPrimeraVisita / totalRegistros) * 100)}%)`, 14, doc.lastAutoTable.finalY + 25);
+                doc.text(`Con segunda visita: ${conSegundaVisita} (${Math.round((conSegundaVisita / totalRegistros) * 100)}%)`, 14, doc.lastAutoTable.finalY + 35);
+
+                // Pie de página
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text('Sistema PREVIBUS - © ' + new Date().getFullYear(), 105, 285, { align: 'center' });
+
+                // Guardar PDF
+                doc.save(`registros_previbus_${new Date().toISOString().split('T')[0]}.pdf`);
+
+            } catch (error) {
+                console.error("Error al generar PDF:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo generar el documento PDF',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        };
+
+        // Función para formatear fecha y hora
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return 'N/A';
+            const date = new Date(dateTimeString);
+            return date.toLocaleString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+
+        // Función auxiliar para cargar scripts dinámicamente
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Función para limpiar el formulario y los datos locales
+        function clearForm() {
             Swal.fire({
-                title: '¿Qué deseas hacer?',
-                showDenyButton: true,
+                title: '¿Limpiar formulario?',
+                text: 'Se perderán todos los datos no guardados permanentemente',
+                icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Nuevo formulario',
-                denyButtonText: 'Ver estadísticas',
-                cancelButtonText: 'Cancelar',
-                confirmButtonColor: '#0f6f61',
-                denyButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, limpiar',
+                cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Nuevo formulario',
-                        text: 'Esta funcionalidad está en desarrollo.',
-                        confirmButtonColor: '#0f6f61'
+                    // Limpiar localStorage
+                    localStorage.removeItem('previbusLastCI');
+                    localStorage.removeItem('previbusLastTab');
+
+                    // Resetear variables
+                    currentCI = null;
+
+                    // Limpiar formulario
+                    document.getElementById('employeeForm').reset();
+
+                    // Ocultar campos condicionales
+                    document.getElementById('tiempo_hta_container').style.display = 'none';
+                    document.getElementById('tiempo_hiperglicemia_container').style.display = 'none';
+
+                    // Resetear progreso
+                    updateProgressSteps('datosGenerales');
+
+                    // Mostrar primera pestaña
+                    document.querySelectorAll('.tab-pane').forEach(tab => {
+                        tab.classList.remove('show', 'active');
                     });
-                } else if (result.isDenied) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Estadísticas',
-                        text: 'Esta funcionalidad está en desarrollo.',
-                        confirmButtonColor: '#0f6f61'
-                    });
+                    document.getElementById('datosGenerales').classList.add('show', 'active');
+
+                    Swal.fire('Formulario limpiado', '', 'success');
                 }
             });
+        }
+
+        //Funcion para descargar Base de Datos
+        function downloadDatabase() {
+            if (!db) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'La base de datos no está inicializada',
+                    confirmButtonText: 'Entendido'
+                });
+                return;
+            }
+
+            try {
+                // Mostrar confirmación primero
+                Swal.fire({
+                    title: '¿Descargar base de datos?',
+                    text: 'Se descargará un archivo SQLite con todos los datos registrados',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, descargar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Exportar la base de datos
+                        const data = db.export();
+                        const blob = new Blob([data], { type: 'application/octet-stream' });
+                        const url = URL.createObjectURL(blob);
+
+                        // Crear enlace de descarga
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `previbus_backup_${new Date().toISOString().split('T')[0]}.sqlite`;
+
+                        // Añadir temporalmente al DOM y hacer click
+                        document.body.appendChild(a);
+                        a.click();
+
+                        // Limpieza
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Descarga completada',
+                            text: 'La base de datos se ha descargado correctamente',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            } catch (err) {
+                console.error('Error al descargar la base de datos:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo descargar la base de datos',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        }
+
+        // Función auxiliar para exportar a Excel
+        const exportToExcel = async () => {
+            try {
+                // Verificar si XLSX está cargado
+                if (typeof XLSX === 'undefined') {
+                    await loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js');
+                }
+
+                if (!db) {
+                    throw new Error('La base de datos no está inicializada');
+                }
+
+                // Obtener datos
+                const result = db.exec(`
+            SELECT 
+                nombre_completo as "Nombre",
+                ci as "CI",
+                CASE WHEN sexo = 'M' THEN 'Masculino' ELSE 'Femenino' END as "Sexo",
+                edad as "Edad",
+                nombre_empresa as "Empresa",
+                actividad_rubro as "Rubro",
+                fecha_primera_visita as "1° Visita",
+                fecha_segunda_visita as "2° Visita"
+            FROM empleados
+            ORDER BY nombre_completo
+        `);
+
+                if (!result[0] || result[0].values.length === 0) {
+                    throw new Error('No hay datos para exportar');
+                }
+
+                // Convertir a formato de hoja de cálculo
+                const ws = XLSX.utils.json_to_sheet(
+                    result[0].values.map(row => ({
+                        Nombre: row[0],
+                        CI: row[1],
+                        Sexo: row[2],
+                        Edad: row[3],
+                        Empresa: row[4],
+                        Rubro: row[5],
+                        "1° Visita": row[6],
+                        "2° Visita": row[7]
+                    }))
+                );
+
+                // Crear libro y descargar
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Empleados");
+                XLSX.writeFile(wb, `reporte_previbus_${new Date().toISOString().slice(0, 10)}.xlsx`);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Reporte exportado a Excel correctamente',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+            } catch (error) {
+                console.error("Error al exportar a Excel:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'No se pudo exportar a Excel',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        };
+
+        function resetearLocalStorage() {
+            if (resetearRegistrosBtn) {
+                resetearRegistrosBtn.addEventListener('click', () => {
+                    // Mostrar una confirmación al usuario antes de resetear
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción eliminará todos los datos registrados.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, resetear todo',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Eliminar todos los elementos almacenados en localStorage
+                            localStorage.clear();
+
+                            // Mostrar un mensaje de éxito (opcional)
+                            Swal.fire(
+                                'Registros reseteados',
+                                'Todos los datos registrados han sido eliminados.',
+                                'success'
+                            ).then(() => {
+                                // Recargar la página para reflejar los cambios (opcional)
+                                window.location.reload();
+                            });
+                        }
+                    });
+                });
+            } else {
+                console.error("No se encontró el botón con el ID 'resetearRegistros'");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initSQL();
+            setupNavigation();
+            setupSaveButtons();
+            setupConditionalFields();
+
+            // Configurar botón para limpiar formulario
+            document.getElementById('clearFormBtn')?.addEventListener('click', clearForm);
+
+            // Configurar botón para generar PDF
+            document.getElementById('generatePDFBtn')?.addEventListener('click', generatePDF);
+
+            // Configurar botón para generar reporte
+            document.getElementById('generateReportBtn')?.addEventListener('click', generateReport);
+
+            // Delegación de eventos para el botón de exportar a Excel
+            document.addEventListener('click', function (event) {
+                if (event.target.matches('#exportReportBtn')) {
+                    exportToExcel();
+                }
+            });
+
+            // Delegación de eventos para el botón de descargar SQLite
+            document.addEventListener('click', function (event) {
+                if (event.target.matches('#downloadDBBtn')) {
+                    downloadDatabase();
+                }
+            });
+
+            //Resetear LocalStorage
+            document.getElementById('resetearRegistrosBtn')?.addEventListener('click', resetearLocalStorage);;
+
+            // Autocalcular edad
+            document.getElementById('fecha_nacimiento')?.addEventListener('change', function () {
+                if (this.value) {
+                    const birthDate = new Date(this.value);
+                    const age = Math.floor((Date.now() - birthDate) / (365.25 * 24 * 60 * 60 * 1000));
+                    document.getElementById('edad').value = age;
+                }
+            });
+
+            // Autocompletar CI
+            document.getElementById('n_ci')?.addEventListener('input', function () {
+                const ci = this.value.trim();
+                if (ci.length >= 6 && db) {
+                    try {
+                        const result = db.exec(`SELECT * FROM empleados WHERE ci LIKE ? LIMIT 1`, [`${ci}%`]);
+                        if (result[0]?.values.length > 0) {
+                            const paciente = result[0].values[0];
+                            const columns = result[0].columns;
+
+                            // Mostrar aviso de que ya existe
+                            Swal.fire({
+                                title: 'Paciente encontrado',
+                                text: 'Se cargarán los datos existentes para este CI',
+                                icon: 'info',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+                            // Cargar datos personales
+                            document.getElementById('nombre_apellido').value = paciente[columns.indexOf('nombre_completo')] || '';
+                            setRadioValue('sexo', paciente[columns.indexOf('sexo')]);
+                            document.getElementById('fecha_nacimiento').value = paciente[columns.indexOf('fecha_nacimiento')] || '';
+                            document.getElementById('edad').value = paciente[columns.indexOf('edad')] || '';
+                            document.getElementById('telefono').value = paciente[columns.indexOf('telefono')] || '';
+                            document.getElementById('localidad').value = paciente[columns.indexOf('localidad')] || '';
+
+                            currentCI = ci;
+                            localStorage.setItem('previbusLastCI', ci);
+                        }
+                    } catch (err) {
+                        console.error("Error en búsqueda por CI:", err);
+                    }
+                }
+            });
+
         });
+
+        //Generación de Reportes Gerenciales
+        const generateReport = () => {
+            if (!db) {
+                showAlert("La base de datos no está inicializada", 'danger');
+                return;
+            }
+
+            try {
+                const reportSection = document.getElementById('reportSection');
+                reportSection.style.display = 'block';
+                reportSection.innerHTML = `
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <i class="fas fa-chart-bar me-2"></i> Reporte Estadístico
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5 class="text-center mb-3">Distribución por Sexo</h5>
+                    <canvas id="sexChart" height="250"></canvas>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5 class="text-center mb-3">Distribución por Edad</h5>
+                    <canvas id="ageChart" height="250"></canvas>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5 class="text-center mb-3">Empresas por Rubro</h5>
+                    <canvas id="rubroChart" height="250"></canvas>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5 class="text-center mb-3">Visitas Programadas</h5>
+                    <canvas id="visitasChart" height="250"></canvas>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button id="exportReportBtn" class="btn btn-success me-2">
+                    <i class="fas fa-file-excel me-2"></i> Exportar a Excel
+                </button>
+                <button id="downloadDBBtn" class="btn btn-primary">
+                    <i class="fas fa-database me-2"></i> Descargar SQLite
+                </button>
+            </div>
+        </div>
+    </div>
+`;
+                const sexData = db.exec(`
+    SELECT 
+        CASE WHEN sexo = 'M' THEN 'Masculino' ELSE 'Femenino' END as sexo, 
+        COUNT(*) as cantidad,
+        ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM empleados), 1) as porcentaje
+    FROM empleados 
+    WHERE sexo IS NOT NULL
+    GROUP BY sexo
+`);
+
+                if (sexData[0]) {
+                    new Chart(document.getElementById('sexChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: sexData[0].values.map(row => `${row[0]} (${row[2]}%)`),
+                            datasets: [{
+                                data: sexData[0].values.map(row => row[1]),
+                                backgroundColor: ['#3498db', '#e74c3c'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return `${context.label}: ${context.raw} empleados`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // 2. Gráfico de distribución por edad (mejorado)
+                const ageData = db.exec("SELECT edad FROM empleados WHERE edad IS NOT NULL");
+                if (ageData[0]) {
+                    const ages = ageData[0].values.map(row => row[0]);
+                    new Chart(document.getElementById('ageChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: ['<20', '20-29', '30-39', '40-49', '50-59', '60+'],
+                            datasets: [{
+                                label: 'Cantidad de empleados',
+                                data: [
+                                    ages.filter(age => age < 20).length,
+                                    ages.filter(age => age >= 20 && age < 30).length,
+                                    ages.filter(age => age >= 30 && age < 40).length,
+                                    ages.filter(age => age >= 40 && age < 50).length,
+                                    ages.filter(age => age >= 50 && age < 60).length,
+                                    ages.filter(age => age >= 60).length
+                                ],
+                                backgroundColor: '#2ecc71',
+                                borderColor: '#27ae60',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Cantidad de empleados'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Rango de edades'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // 3. Nuevo gráfico: Empresas por rubro
+                const rubroData = db.exec(`
+    SELECT 
+        actividad_rubro as rubro, 
+        COUNT(*) as cantidad
+    FROM empleados 
+    WHERE actividad_rubro IS NOT NULL AND actividad_rubro != ''
+    GROUP BY actividad_rubro
+    ORDER BY cantidad DESC
+    LIMIT 5
+`);
+
+                if (rubroData[0]) {
+                    new Chart(document.getElementById('rubroChart'), {
+                        type: 'bar', // Ahora usa 'bar'
+                        data: {
+                            labels: rubroData[0].values.map(row => row[0] || 'Sin especificar'),
+                            datasets: [{
+                                label: 'Empleados por rubro',
+                                data: rubroData[0].values.map(row => row[1]),
+                                backgroundColor: '#9b59b6',
+                                borderColor: '#8e44ad',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y', // Especifica que el eje Y es el eje de índice (horizontal)
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Cantidad de empleados' // Añade un título al eje X
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Rubro empresarial' // Añade un título al eje Y
+                                    },
+                                },
+                            },
+                        },
+                    });
+                }
+                // 4. Nuevo gráfico: Visitas programadas
+                const visitasData = db.exec(`
+    SELECT
+        SUM(CASE WHEN fecha_primera_visita IS NOT NULL THEN 1 ELSE 0 END) as primera_visita,
+        SUM(CASE WHEN fecha_segunda_visita IS NOT NULL THEN 1 ELSE 0 END) as segunda_visita,
+        COUNT(*) as total
+    FROM empleados
+`);
+
+                if (visitasData[0]) {
+                    const [primera, segunda, total] = visitasData[0].values[0];
+                    new Chart(document.getElementById('visitasChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: ['1° Visita Programada', '2° Visita Programada', 'Sin Visitas'],
+                            datasets: [{
+                                data: [primera, segunda, total - primera - segunda],
+                                backgroundColor: ['#f39c12', '#e67e22', '#bdc3c7']
+                            }]
+                        }
+                    });
+                }
+
+            } catch (error) {
+                console.error("Error al generar reporte:", error);
+                Swal.fire('Error', `Error al generar reporte: ${error.message}`, 'error');
+            }
+        };
     </script>
 </body>
 
