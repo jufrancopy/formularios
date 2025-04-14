@@ -252,6 +252,34 @@
             margin-right: 10px;
             color: var(--primary-color);
         }
+
+        /* Agregar esto en tu sección de estilos */
+        footer {
+            font-size: 0.9rem;
+            color: #555;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        footer strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        footer small {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -567,8 +595,19 @@
     </div>
 
     <footer class="bg-light py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">© 2023 Ministerio de Salud Pública. Todos los derechos reservados.</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 text-center text-md-start">
+                    <p class="mb-1"><strong>Formulario técnico elaborado por:</strong> Lic. Julio Franco - <a
+                            href="https://www.linkedin.com/in/jufrancopy" target="_blank">LinkedIn</a></p>
+                    <p class="mb-1"><small>Según parámetros definidos por el Departamento de Proyectos de la Dirección
+                            de Planificación del IPS</small></p>
+                    <p class="mb-0"><small>Bajo coordinación de la Arq. Cristina Cabrera</small></p>
+                </div>
+                <div class="col-md-4 text-center text-md-end mt-3 mt-md-0">
+                    <p class="mb-0">© 2025 Instituto de Previsión Social</p>
+                </div>
+            </div>
         </div>
     </footer>
 
