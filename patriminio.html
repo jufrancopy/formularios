@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Patrimonios - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --info-color: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .filter-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 300px;
+            font-size: 1rem;
+        }
+        
+        .dashboard {
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+        
+        .dashboard-summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .summary-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .summary-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 1rem;
+            color: #777;
+        }
+        
+        .chart-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            height: 400px;
+            position: relative;
+        }
+        
+        .type-summary {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .type-summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .type-summary-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .type-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s ease;
+        }
+        
+        .type-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .type-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 15px;
+        }
+        
+        .type-info {
+            flex: 1;
+        }
+        
+        .type-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .type-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin: 30px 0 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        .patrimonios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .patrimonio-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .patrimonio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .icon-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .patrimonio-info {
+            flex: 1;
+        }
+        
+        .patrimonio-number {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .patrimonio-type {
+            font-size: 1rem;
+            color: #555;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2rem;
+            color: #777;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* Icon colors based on type */
+        .icon-escritorio { background-color: #3498db; }
+        .icon-monitor { background-color: #9b59b6; }
+        .icon-teclado { background-color: #1abc9c; }
+        .icon-cpu { background-color: #34495e; }
+        .icon-silla { background-color: #e67e22; }
+        .icon-tv { background-color: #e74c3c; }
+        .icon-sofa { background-color: #16a085; }
+        .icon-balanza { background-color: #95a5a6; }
+        .icon-telefono { background-color: #2ecc71; }
+        .icon-camilla { background-color: #f39c12; }
+        .icon-mouse { background-color: #d35400; }
+        .icon-split { background-color: #2980b9; }
+        .icon-bebedero { background-color: #3498db; }
+        .icon-upc { background-color: #8e44ad; }
+        .icon-switch { background-color: #16a085; }
+        .icon-mesa { background-color: #27ae60; }
+        .icon-gabeta { background-color: #7f8c8d; }
+        .icon-reloj { background-color: #c0392b; }
+        .icon-banco { background-color: #d35400; }
+        .icon-matafuego { background-color: #e74c3c; }
+        .icon-silla-rueda { background-color: #3498db; }
+        .icon-sillon { background-color: #9b59b6; }
+        .icon-armario { background-color: #8e44ad; }
+        .icon-mostrador { background-color: #16a085; }
+        .icon-mueble { background-color: #7f8c8d; }
+        .icon-default { background-color: #95a5a6; }
+        
+        @media print {
+            .actions, .filter-container, .dashboard, .type-summary {
+                display: none;
+            }
+            
+            .patrimonios-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .patrimonio-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-summary {
+                flex-direction: column;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .patrimonios-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-input {
+                width: 100%;
+            }
+        }
+
+        .type-count-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .type-count-table th, .type-count-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            font-size: 1rem;
+            vertical-align: top;
+        }
+        .type-count-table th {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .type-count-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        /* Mejor manejo de textos largos en la columna de números */
+        .type-count-table td.nros {
+            word-break: break-all;
+            max-width: 420px;
+            white-space: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PATRIMONIO - POLICLINICA MCAL. LOPEZ</h1>
+            <p class="subtitle">Dashboard de Gestión de Bienes y Activos</p>
+        </header>
+        
+        <div class="actions">
+            <button id="download-pdf-btn" class="btn btn-primary">
+                <i class="fa fa-file-pdf"></i> Descargar Resumen (PDF)
+            </button>
+            <button id="whatsapp-btn" class="btn btn-success" title="Compartir por WhatsApp">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </button>
+        </div>
+        
+        <div class="dashboard">
+            <!-- contenedor donde se renderiza el resumen en tabla -->
+            <div id="type-count-dashboard"></div>
+        </div>
+        
+        <div class="filter-container">
+            <input id="search-input" class="filter-input" type="search" placeholder="Buscar por tipo o número...">
+        </div>
+        
+        <h2 class="section-title">Patrimonios Numerados</h2>
+        <div class="patrimonios-grid" id="patrimonios-container">
+            <!-- Los patrimonios se cargarán aquí mediante JavaScript -->
+        </div>
+        
+        <h2 class="section-title">Patrimonios sin Numeración</h2>
+        <div class="patrimonios-grid" id="patrimonios-sin-num-container">
+            <!-- Los patrimonios sin número se cargarán aquí mediante JavaScript -->
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Sistema de Gestión de Patrimonios. Todos los derechos reservados.</p>
+            <p>Elaborado por Julio Franco - Dirección de Medicina Preventiva</p>
+        </footer>
+    </div>
+
+    <!-- librerías para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        // Datos de patrimonios
+        const patrimonios = [
+            { nro: "304.835", tipo: "escritorio" },
+            { nro: "304806", tipo: "escritorio" },
+            { nro: "219215", tipo: "monitor" },
+            { nro: "218162", tipo: "teclado" },
+            { nro: "217743", tipo: "cpu" },
+            { nro: "316336", tipo: "silla" },
+            { nro: "305309", tipo: "silla" },
+            { nro: "335452", tipo: "tv" },
+            { nro: "305907", tipo: "sofa largo" },
+            { nro: "308583", tipo: "sofa corto" },
+            { nro: "308606", tipo: "sofa corto" },
+            { nro: "305301", tipo: "silla" },
+            { nro: "304298", tipo: "monitor" },
+            { nro: "304424", tipo: "teclado" },
+            { nro: "354398", tipo: "silla c posabrazo" },
+            { nro: "118652", tipo: "balanza" },
+            { nro: "308400", tipo: "silla" },
+            { nro: "316441", tipo: "silla con rueda" },
+            { nro: "2990-066-61218", tipo: "silla" },
+            { nro: "315203", tipo: "escritorio" },
+            { nro: "179778-1", tipo: "mesita con rueda" },
+            { nro: "299562", tipo: "silla" },
+            { nro: "316118", tipo: "escritorio" },
+            { nro: "304362", tipo: "cpu" },
+            { nro: "217331", tipo: "monitor" },
+            { nro: "243743", tipo: "teclado" },
+            { nro: "207252", tipo: "telefono ip" },
+            { nro: "298685", tipo: "silla" },
+            { nro: "213418", tipo: "camilla" },
+            { nro: "304317", tipo: "cpu" },
+            { nro: "304213. 304350", tipo: "monitor" },
+            { nro: "220011", tipo: "teclado-16" },
+            { nro: "224554", tipo: "silla conrueda" },
+            { nro: "348043", tipo: "silla" },
+            { nro: "235566", tipo: "teclado-17" },
+            { nro: "217469", tipo: "monitor" },
+            { nro: "315229", tipo: "escritorio" },
+            { nro: "299563", tipo: "silla" },
+            { nro: "122602", tipo: "balanza" },
+            { nro: "380962", tipo: "escritorio" },
+            { nro: "307274", tipo: "split" },
+            { nro: "307275", tipo: "split" },
+            { nro: "316342", tipo: "silla con rueda" },
+            { nro: "316351", tipo: "silla con rueda" },
+            { nro: "308379", tipo: "silla" },
+            { nro: "224869", tipo: "silla" },
+            { nro: "217774", tipo: "cpu" },
+            { nro: "216279", tipo: "mouse" },
+            { nro: "218114", tipo: "teclado" },
+            { nro: "215971", tipo: "monitor" },
+            { nro: "315231", tipo: "escritorio" },
+            { nro: "305913", tipo: "sofa largo" },
+            { nro: "314986", tipo: "bebedero" },
+            { nro: "124298", tipo: "upc" },
+            { nro: "202568", tipo: "switch" },
+            { nro: "308430", tipo: "silla" },
+            { nro: "222588", tipo: "mesa circular" },
+            { nro: "315205", tipo: "escritorio" },
+            { nro: "304207", tipo: "monitor" },
+            { nro: "180190", tipo: "monitor" },
+            { nro: "216062", tipo: "cpu" },
+            { nro: "216114", tipo: "cpu" },
+            { nro: "219704", tipo: "cpu" },
+            { nro: "224427", tipo: "silla" },
+            { nro: "304351", tipo: "cpu" },
+            { nro: "203139", tipo: "monitor" },
+            { nro: "304841", tipo: "escritorio" },
+            { nro: "178081", tipo: "gabeta" },
+            { nro: "305442", tipo: "silla" },
+            { nro: "177131", tipo: "escritorio" },
+            { nro: "308401", tipo: "silla" },
+            { nro: "305621", tipo: "silla" },
+            { nro: "315201", tipo: "escritorio" },
+            { nro: "305583", tipo: "silla" },
+            { nro: "308580", tipo: "sofa" },
+            { nro: "313669", tipo: "silla" },
+            { nro: "305353", tipo: "silla" },
+            { nro: "316117", tipo: "escritorio" },
+            { nro: "305599", tipo: "silla" },
+            { nro: "305565", tipo: "silla" },
+            { nro: "308399", tipo: "silla" },
+            { nro: "315199", tipo: "escritorio" },
+            { nro: "340012", tipo: "monitor" },
+            { nro: "238018", tipo: "cpu" },
+            { nro: "340055", tipo: "teclado" },
+            { nro: "299560", tipo: "silla" },
+            { nro: "305409", tipo: "silla" },
+            { nro: "305452", tipo: "silla" },
+            { nro: "308536", tipo: "scritorio" },
+            { nro: "305488", tipo: "silla" },
+            { nro: "305675", tipo: "silla" },
+            { nro: "305659", tipo: "silla" },
+            { nro: "329959", tipo: "silla" },
+            { nro: "316115", tipo: "escritorio" },
+            { nro: "217508", tipo: "monitor" },
+            { nro: "217799", tipo: "cpu" },
+            { nro: "124482", tipo: "teclado" },
+            { nro: "305317", tipo: "silla" },
+            { nro: "305536", tipo: "silla" },
+            { nro: "316119", tipo: "escritorio" },
+            { nro: "216028", tipo: "monitor" },
+            { nro: "218126", tipo: "teclado" },
+            { nro: "219711", tipo: "cpu" },
+            { nro: "213429", tipo: "camilla" },
+            { nro: "305699", tipo: "silla" },
+            { nro: "305672", tipo: "silla" },
+            { nro: "340040", tipo: "monitor" },
+            { nro: "340005", tipo: "cpu" },
+            { nro: "315206", tipo: "escritorio" },
+            { nro: "305572", tipo: "silla" },
+            { nro: "305696", tipo: "silla" },
+            { nro: "305466", tipo: "silla" },
+            { nro: "308597", tipo: "sofa corto" },
+            { nro: "307238", tipo: "split" },
+            { nro: "307237", tipo: "split" },
+            { nro: "308595", tipo: "sofa corto" },
+            { nro: "305405", tipo: "silla" },
+            { nro: "203909", tipo: "teclado" },
+            { nro: "240637", tipo: "monitor" },
+            { nro: "235880", tipo: "cpu" },
+            { nro: "128811", tipo: "mouse" },
+            { nro: "348063", tipo: "reloj marcador" },
+            { nro: "313976", tipo: "tv" },
+            { nro: "305495", tipo: "silla" },
+            { nro: "305535", tipo: "silla" },
+            { nro: "235238", tipo: "monitor" },
+            { nro: "220004", tipo: "teclado" },
+            { nro: "123993", tipo: "mouse" },
+            { nro: "235406", tipo: "cpu" },
+            { nro: "316356", tipo: "silla" },
+            { nro: "315200", tipo: "escritorio" },
+            { nro: "3160-69063", tipo: "camilla" },
+            { nro: "3410-70.072", tipo: "" },
+            { nro: "299564", tipo: "silla" },
+            { nro: "316615", tipo: "banco de madera" },
+            { nro: "316614", tipo: "banco de madera" },
+            { nro: "316612", tipo: "banco de madera" },
+            { nro: "316690", tipo: "banco de madera" },
+            { nro: "316617", tipo: "banco de madera" },
+            { nro: "316613", tipo: "banco de madera" },
+            { nro: "305239", tipo: "banco de metal" },
+            { nro: "305257", tipo: "banco de metal" },
+            { nro: "305226", tipo: "banco de metal" },
+            { nro: "305224", tipo: "banco de metal" },
+            { nro: "316340", tipo: "silla con rueda" },
+            { nro: "381002", tipo: "silla" },
+            { nro: "305218", tipo: "banco de metal" },
+            { nro: "305215", tipo: "banco de metal" },
+            { nro: "307287", tipo: "split" },
+            { nro: "248223", tipo: "matafuego" },
+            { nro: "307290", tipo: "split" },
+            { nro: "305411", tipo: "silla" },
+            { nro: "316616", tipo: "banco de madera" },
+            { nro: "308603", tipo: "sofa corto" },
+            { nro: "248222", tipo: "matafuego" },
+            { nro: "307236", tipo: "split" },
+            { nro: "314985", tipo: "bebedero" },
+            { nro: "363277", tipo: "matafuego" },
+            { nro: "263275", tipo: "matafuego" },
+            { nro: "363271", tipo: "matafuego" },
+            { nro: "299561", tipo: "silla" },
+            { nro: "320052.", tipo: "silla de rueda" },
+            { nro: "320057.", tipo: "silla de rueda" },
+            { nro: "331912.", tipo: "silla de rueda" },
+            { nro: "400000", tipo: "escritorio" } // agregado: nuevo card/patrimonio
+        ];
+        
+        const patrimoniosSinNumero = [
+            { cantidad: "2", tipo: "silla de plastico" },
+            { cantidad: "1", tipo: "banco de madera" },
+            { cantidad: "1", tipo: "sillon odontolgoico" },
+            { cantidad: "2", tipo: "mesa" },
+            { cantidad: "1", tipo: "armario de mader" },
+            { cantidad: "1", tipo: "sofa largo" },
+            { cantidad: "1", tipo: "mostrador" },
+            { cantidad: "1", tipo: "DEA (Desfibrilador externo automático)" },
+            { cantidad: "1", tipo: "mueble de metal" }
+        ];
+        
+        // Función para obtener el icono según el tipo
+        function getIcon(tipo) {
+            tipo = tipo.toLowerCase();
+            
+            if (tipo.includes('escritorio') || tipo.includes('scritorio')) return 'fa-desktop';
+            if (tipo.includes('monitor')) return 'fa-tv';
+            if (tipo.includes('teclado')) return 'fa-keyboard';
+            if (tipo.includes('cpu')) return 'fa-microchip';
+            if (tipo.includes('silla')) {
+                if (tipo.includes('rueda') || tipo.includes('conrueda')) return 'fa-wheelchair';
+                return 'fa-chair';
+            }
+            if (tipo.includes('tv')) return 'fa-tv';
+            if (tipo.includes('sofa')) return 'fa-couch';
+            if (tipo.includes('balanza')) return 'fa-weight';
+            if (tipo.includes('telefono')) return 'fa-phone';
+            if (tipo.includes('camilla')) return 'fa-bed';
+            if (tipo.includes('mouse')) return 'fa-computer-mouse';
+            if (tipo.includes('split')) return 'fa-wind';
+            if (tipo.includes('bebedero')) return 'fa-faucet';
+            if (tipo.includes('upc')) return 'fa-plug';
+            if (tipo.includes('switch')) return 'fa-network-wired';
+            if (tipo.includes('mesa')) return 'fa-table';
+            if (tipo.includes('gabeta')) return 'fa-archive';
+            if (tipo.includes('reloj')) return 'fa-clock';
+            if (tipo.includes('banco')) return 'fa-bench';
+            if (tipo.includes('matafuego')) return 'fa-fire-extinguisher';
+            if (tipo.includes('sillon')) return 'fa-couch';
+            if (tipo.includes('armario')) return 'fa-door-closed';
+            if (tipo.includes('mostrador')) return 'fa-store';
+            if (tipo.includes('mueble')) return 'fa-cube';
+            
+            return 'fa-cube'; // Icono por defecto
+        }
+        
+        // Función para obtener la clase CSS según el tipo
+        function getIconClass(tipo) {
+            tipo = tipo.toLowerCase();
+            
+            if (tipo.includes('escritorio') || tipo.includes('scritorio')) return 'icon-escritorio';
+            if (tipo.includes('monitor')) return 'icon-monitor';
+            if (tipo.includes('teclado')) return 'icon-teclado';
+            if (tipo.includes('cpu')) return 'icon-cpu';
+            if (tipo.includes('silla')) {
+                if (tipo.includes('rueda') || tipo.includes('conrueda')) return 'icon-silla-rueda';
+                return 'icon-silla';
+            }
+            if (tipo.includes('tv')) return 'icon-tv';
+            if (tipo.includes('sofa')) return 'icon-sofa';
+            if (tipo.includes('balanza')) return 'icon-balanza';
+            if (tipo.includes('telefono')) return 'icon-telefono';
+            if (tipo.includes('camilla')) return 'icon-camilla';
+            if (tipo.includes('mouse')) return 'icon-mouse';
+            if (tipo.includes('split')) return 'icon-split';
+            if (tipo.includes('bebedero')) return 'icon-bebedero';
+            if (tipo.includes('upc')) return 'icon-upc';
+            if (tipo.includes('switch')) return 'icon-switch';
+            if (tipo.includes('mesa')) return 'icon-mesa';
+            if (tipo.includes('gabeta')) return 'icon-gabeta';
+            if (tipo.includes('reloj')) return 'icon-reloj';
+            if (tipo.includes('banco')) return 'icon-banco';
+            if (tipo.includes('matafuego')) return 'icon-matafuego';
+            if (tipo.includes('sillon')) return 'icon-sillon';
+            if (tipo.includes('armario')) return 'icon-armario';
+            if (tipo.includes('mostrador')) return 'icon-mostrador';
+            if (tipo.includes('mueble')) return 'icon-mueble';
+            
+            return 'icon-default'; // Clase por defecto
+        }
+        
+        // Función para renderizar los patrimonios
+        function renderPatrimonios(patrimoniosList, containerId, includeNumber = true) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (patrimoniosList.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron resultados</div>';
+                return;
+            }
+            
+            patrimoniosList.forEach(patrimonio => {
+                const card = document.createElement('div');
+                card.className = 'patrimonio-card';
+                
+                const iconClass = getIconClass(patrimonio.tipo);
+                const icon = getIcon(patrimonio.tipo);
+                
+                let numberHtml = '';
+                if (includeNumber) {
+                    numberHtml = `<div class="patrimonio-number">${patrimonio.nro}</div>`;
+                } else {
+                    numberHtml = `<div class="patrimonio-number">Cantidad: ${patrimonio.cantidad}</div>`;
+                }
+                
+                card.innerHTML = `
+                    <div class="icon-container ${iconClass}">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="patrimonio-info">
+                        ${numberHtml}
+                        <div class="patrimonio-type">${patrimonio.tipo}</div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Función para filtrar patrimonios
+        function filterPatrimonios(searchTerm) {
+            const filteredPatrimonios = patrimonios.filter(p => 
+                p.nro.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                p.tipo.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            const filteredSinNumero = patrimoniosSinNumero.filter(p => 
+                p.tipo.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            renderPatrimonios(filteredPatrimonios, 'patrimonios-container');
+            renderPatrimonios(filteredSinNumero, 'patrimonios-sin-num-container', false);
+        }
+        
+        // Función para generar el resumen por tipo
+        function generateTypeSummary() {
+            const typeData = {};
+
+            const allPatrimonios = [
+                ...patrimonios.map(p => ({ ...p, cantidad: 1 })),
+                ...patrimoniosSinNumero.map(p => ({ ...p, cantidad: parseInt(p.cantidad) || 1, nro: null }))
+            ];
+
+            allPatrimonios.forEach(p => {
+                if (p.tipo) {
+                    let tipo = p.tipo.toLowerCase().trim();
+                    if (!tipo) return;
+
+                    // Normalizar nombres
+                    if (tipo.startsWith('scritorio')) tipo = 'escritorio';
+                    if (tipo.includes('silla') && tipo.includes('rueda')) tipo = 'silla con rueda';
+                    if (tipo.includes('silla') && tipo.includes('conrueda')) tipo = 'silla con rueda';
+                    if (tipo.startsWith('sofa')) tipo = 'sofa';
+                    if (tipo.startsWith('banco')) tipo = 'banco';
+                    
+                    if (!typeData[tipo]) {
+                        typeData[tipo] = { count: 0, nros: [] };
+                    }
+                    
+                    typeData[tipo].count += p.cantidad;
+                    if (p.nro) {
+                        typeData[tipo].nros.push(p.nro);
+                    }
+                }
+            });
+            
+            const typeArray = Object.keys(typeData).map(tipo => ({
+                tipo,
+                count: typeData[tipo].count,
+                nros: typeData[tipo].nros
+            }));
+            
+            typeArray.sort((a, b) => b.count - a.count);
+            
+            return typeArray;
+        }
+        
+        // Función para renderizar el resumen por tipo en tarjetas
+        function renderTypeSummary(typeSummary) {
+            const container = document.getElementById('type-summary-container');
+            container.innerHTML = '';
+            
+            typeSummary.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'type-card';
+                
+                const iconClass = getIconClass(item.tipo);
+                const icon = getIcon(item.tipo);
+                
+                card.innerHTML = `
+                    <div class="type-icon ${iconClass}">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="type-info">
+                        <div class="type-name">${item.tipo}</div>
+                        <div class="type-count">${item.count} unidades</div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Función para renderizar el dashboard de conteo en una tabla
+        function renderTypeCountDashboard(typeSummary) {
+            const container = document.getElementById('type-count-dashboard');
+            container.innerHTML = '';
+
+            const table = document.createElement('table');
+            table.className = 'type-count-table';
+
+            let tableHTML = `
+                <thead>
+                    <tr>
+                        <th>Tipo de Patrimonio</th>
+                        <th>Cantidad</th>
+                        <th>Nro de Patrimonio</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            typeSummary.forEach(item => {
+                const nrosDisplay = (item.nros && item.nros.length > 0) ? item.nros.join(', ') : '-';
+                tableHTML += `
+                    <tr>
+                        <td>${item.tipo}</td>
+                        <td>${item.count}</td>
+                        <td class="nros">${nrosDisplay}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `</tbody>`;
+            table.innerHTML = tableHTML;
+            container.appendChild(table);
+        }
+        
+        // Función para actualizar el dashboard
+        function updateDashboard() {
+            const typeSummary = generateTypeSummary();
+
+            const totalPatrimonios = typeSummary.reduce((sum, item) => sum + item.count, 0);
+            const totalTipos = typeSummary.length;
+            const totalNumerados = patrimonios.filter(p => p.tipo).length;
+            const totalSinNumero = patrimoniosSinNumero.reduce((sum, p) => sum + (parseInt(p.cantidad) || 1), 0);
+            
+            document.getElementById('total-patrimonios').textContent = totalPatrimonios;
+            document.getElementById('total-tipos').textContent = totalTipos;
+            document.getElementById('total-numerados').textContent = totalNumerados;
+            document.getElementById('total-sin-numero').textContent = totalSinNumero;
+            
+            renderTypeSummary(typeSummary);
+            renderTypeCountDashboard(typeSummary);
+            createChart(typeSummary);
+        }
+        
+        // Función para crear el gráfico
+        function createChart(typeSummary) {
+            const topTypes = typeSummary.slice(0, 10);
+            
+            const ctx = document.getElementById('patrimoniosChart');
+            
+            if (window.patrimoniosChartInstance) {
+                window.patrimoniosChartInstance.destroy();
+            }
+            
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js no está cargado");
+                return;
+            }
+            
+            window.patrimoniosChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: topTypes.map(item => item.tipo),
+                    datasets: [{
+                        label: 'Cantidad de Patrimonios',
+                        data: topTypes.map(item => item.count),
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)', 'rgba(155, 89, 182, 0.7)',
+                            'rgba(46, 204, 113, 0.7)', 'rgba(241, 196, 15, 0.7)',
+                            'rgba(230, 126, 34, 0.7)', 'rgba(231, 76, 60, 0.7)',
+                            'rgba(26, 188, 156, 0.7)', 'rgba(52, 73, 94, 0.7)',
+                            'rgba(149, 165, 166, 0.7)', 'rgba(243, 156, 18, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)', 'rgba(155, 89, 182, 1)',
+                            'rgba(46, 204, 113, 1)', 'rgba(241, 196, 15, 1)',
+                            'rgba(230, 126, 34, 1)', 'rgba(231, 76, 60, 1)',
+                            'rgba(26, 188, 156, 1)', 'rgba(52, 73, 94, 1)',
+                            'rgba(149, 165, 166, 1)', 'rgba(243, 156, 18, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Top 10 Tipos de Patrimonios', font: { size: 16 } },
+                        legend: { display: false }
+                    },
+                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                }
+            });
+        }
+        
+        // Generar y descargar PDF con resumen en tabla
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf || {};
+            if (!jsPDF || !window.html2canvas) {
+                alert('Faltan librerías para generar PDF.');
+                return;
+            }
+
+            // Obtener resumen por tipo (usa la función ya existente)
+            const typeSummary = generateTypeSummary();
+
+            // Construir contenido HTML para el PDF
+            const temp = document.createElement('div');
+            temp.style.width = '1200px';
+            temp.style.padding = '20px';
+            temp.style.background = '#fff';
+            temp.style.color = '#000';
+            temp.style.fontFamily = "Arial, Helvetica, sans-serif";
+
+            // Título (usar h1)
+            const titulo = document.createElement('h1');
+            titulo.textContent = document.querySelector('h1') ? document.querySelector('h1').textContent.trim() : 'Resumen de Patrimonio';
+            titulo.style.fontSize = '28px';
+            titulo.style.marginBottom = '6px';
+            temp.appendChild(titulo);
+
+            // Fecha de relevamiento y responsables (sin autor del informe)
+            const fecha = document.createElement('p');
+            fecha.textContent = 'Fecha de Relevamiento: 18/11/2025';
+            fecha.style.margin = '0 0 6px 0';
+            fecha.style.fontSize = '13px';
+            temp.appendChild(fecha);
+
+            const relevado = document.createElement('p');
+            relevado.textContent = 'Relevado por: Julio Franco - Florencia Cáceres';
+            relevado.style.margin = '0 0 12px 0';
+            relevado.style.fontSize = '13px';
+            temp.appendChild(relevado);
+
+            // Tabla resumen
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th style="border:1px solid #ddd;padding:8px;text-align:left">Tipo de Patrimonio</th>
+                        <th style="border:1px solid #ddd;padding:8px;text-align:left">Cantidad</th>
+                        <th style="border:1px solid #ddd;padding:8px;text-align:left">Nro de Patrimonio</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+
+            const tbody = table.querySelector('tbody');
+
+            typeSummary.forEach(item => {
+                const tr = document.createElement('tr');
+
+                const tdTipo = document.createElement('td');
+                tdTipo.style.border = '1px solid #ddd';
+                tdTipo.style.padding = '8px';
+                tdTipo.textContent = item.tipo;
+
+                const tdCount = document.createElement('td');
+                tdCount.style.border = '1px solid #ddd';
+                tdCount.style.padding = '8px';
+                tdCount.textContent = item.count;
+
+                const tdNros = document.createElement('td');
+                tdNros.style.border = '1px solid #ddd';
+                tdNros.style.padding = '8px';
+                tdNros.style.wordBreak = 'break-all';
+                tdNros.textContent = (item.nros && item.nros.length > 0) ? item.nros.join(', ') : '-';
+
+                tr.appendChild(tdTipo);
+                tr.appendChild(tdCount);
+                tr.appendChild(tdNros);
+                tbody.appendChild(tr);
+            });
+
+            temp.appendChild(table);
+            document.body.appendChild(temp);
+
+            // Renderizar con html2canvas y generar PDF
+            try {
+                const canvas = await html2canvas(temp, { scale: 2, useCORS: true });
+                const imgData = canvas.toDataURL('image/png');
+
+                // Crear PDF en tamaño oficio (216 x 340 mm) en orientación vertical
+                const pdf = new jsPDF('p', 'mm', [216, 340]);
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                // calcular altura proporcional
+                const imgProps = pdf.getImageProperties(imgData);
+                const imgWidthMM = pageWidth;
+                const imgHeightMM = (imgProps.height * imgWidthMM) / imgProps.width;
+
+                if (imgHeightMM <= pageHeight) {
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidthMM, imgHeightMM);
+                } else {
+                    // si es más alto que la página, dividir en varias páginas
+                    let remainingHeight = imgProps.height;
+                    const pxPerMM = imgProps.height / imgHeightMM;
+                    let yOffsetPx = 0;
+                    while (remainingHeight > 0) {
+                        const canvasPart = document.createElement('canvas');
+                        const partHeightPx = Math.min(remainingHeight, Math.floor(pageHeight * pxPerMM));
+                        canvasPart.width = canvas.width;
+                        canvasPart.height = partHeightPx;
+                        const ctx = canvasPart.getContext('2d');
+                        ctx.drawImage(canvas, 0, yOffsetPx, canvas.width, partHeightPx, 0, 0, canvas.width, partHeightPx);
+                        const imgPart = canvasPart.toDataURL('image/png');
+                        const imgPartProps = pdf.getImageProperties(imgPart);
+                        const imgPartHeightMM = (imgPartProps.height * imgWidthMM) / imgPartProps.width;
+                        pdf.addImage(imgPart, 'PNG', 0, 0, imgWidthMM, imgPartHeightMM);
+                        remainingHeight -= partHeightPx;
+                        yOffsetPx += partHeightPx;
+                        if (remainingHeight > 0) pdf.addPage();
+                    }
+                }
+
+                pdf.save('Resumen_Patrimonio_oficio.pdf');
+            } catch (err) {
+                console.error(err);
+                alert('Error al generar el PDF.');
+            } finally {
+                // limpiar
+                temp.remove();
+            }
+        }
+
+        // Conectar botón
+        document.getElementById('download-pdf-btn').addEventListener('click', () => {
+            generatePDF();
+        });
+
+        // Configurar el evento de búsqueda
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            filterPatrimonios(e.target.value);
+        });
+        
+        // Configurar el botón de WhatsApp
+        document.getElementById('whatsapp-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            let message = "Listado de Patrimonios:\n\n";
+            message += "Patrimonios Numerados:\n";
+            patrimonios.forEach(p => { message += `${p.nro} - ${p.tipo}\n`; });
+            
+            message += "\nPatrimonios sin Numeración:\n";
+            patrimoniosSinNumero.forEach(p => { message += `${p.cantidad} - ${p.tipo}\n`; });
+            
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+        });
+        
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPatrimonios(patrimonios, 'patrimonios-container');
+            renderPatrimonios(patrimoniosSinNumero, 'patrimonios-sin-num-container', false);
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>

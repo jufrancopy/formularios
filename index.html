@@ -427,6 +427,20 @@
                 </div>
             </div>
 
+            <!-- Nuevo card: Enlace a patriminio.html -->
+            <div class="col-lg-4 col-md-6" data-categories="patrimonio">
+                <a href="patriminio.html" class="text-decoration-none">
+                    <div class="card card-formulario">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png" class="card-img-top" alt="Patrimonio">
+                        <div class="card-body">
+                            <h5 class="card-title">Gestión de Patrimonios</h5>
+                            <p class="card-text">Ver y administrar el inventario de bienes y activos.</p>
+                            <button class="btn btn-primary-custom">Ir a Patrimonio</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         </div>
     </div>
 
@@ -570,7 +584,7 @@
 
                 // Guardar la votación (simulación)
                 const ip = 'guest'; // En un entorno real, obtendríamos la IP del usuario
-                const ratings = JSON.parse(localStorage.getItem('formRatings') || {};
+                const ratings = JSON.parse(localStorage.getItem('formRatings') || {});
                 ratings[formId] = ratings[formId] || {};
 
                 // Verificar si ya votó
