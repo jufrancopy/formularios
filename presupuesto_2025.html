@@ -685,174 +685,151 @@
 
             const pageWidth = 210;
             const pageHeight = 297;
-            const margin = 20;
+            const margin = 25;
             const contentWidth = pageWidth - (margin * 2);
             let yPos = margin;
 
-            // Header compacto con logo
+            // HEADER SIMPLE Y PROFESIONAL
             pdf.setFillColor(227, 30, 36);
-            pdf.rect(0, 0, pageWidth, 35, 'F');
+            pdf.rect(0, 0, pageWidth, 40, 'F');
 
-            // Agregar logo pequeño al PDF (si existe la imagen)
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(20);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('PRESUPUESTO MUSICAL', pageWidth / 2, 20, { align: 'center' });
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+            pdf.text('LIVE CÁMARA - Orquesta Profesional', pageWidth / 2, 30, { align: 'center' });
+
+            // Logo pequeño en esquina
             try {
                 const img = new Image();
                 img.src = 'logo_lc.png';
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
-                    const imgData = canvas.toDataURL('image/png');
-
-                    // Logo pequeño en el header
-                    pdf.addImage(imgData, 'PNG', margin, 5, 25, 25);
-
-                    pdf.setTextColor(255, 255, 255);
-                    pdf.setFontSize(24);
-                    pdf.setFont(undefined, 'bold');
-                    pdf.text('LIVE CÁMARA', margin + 35, 18);
-
-                    pdf.setFontSize(10);
-                    pdf.setFont(undefined, 'normal');
-                    pdf.text('Orquesta Profesional • Julio Franco | 0981 574 711 | jucfra23@gmail.com', margin + 35, 28);
-                };
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                const imgData = canvas.toDataURL('image/png');
+                pdf.addImage(imgData, 'PNG', pageWidth - 50, 5, 30, 30);
             } catch (e) {
-                // Si no se puede cargar el logo, continuar sin él
-                pdf.setTextColor(255, 255, 255);
-                pdf.setFontSize(24);
-                pdf.setFont(undefined, 'bold');
-                pdf.text('LIVE CÁMARA', margin, 18);
-
-                pdf.setFontSize(10);
-                pdf.setFont(undefined, 'normal');
-                pdf.text('Orquesta Profesional • Julio Franco | 0981 574 711 | jucfra23@gmail.com', margin, 28);
+                // Logo no disponible, continuar sin él
             }
 
-            yPos = 45;
+            yPos = 50;
 
-            // Detalles del evento compactos
-            pdf.setTextColor(227, 30, 36);
-            pdf.setFontSize(14);
+            // DATOS DEL EVENTO
+            pdf.setTextColor(40, 40, 40);
+            pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.text('Concierto de Villancicos - Explanada Hospital INGAVI', margin, yPos);
+            pdf.text('DETALLES DEL EVENTO', margin, yPos);
 
-            pdf.setTextColor(100, 100, 100);
-            pdf.setFontSize(9);
+            yPos += 10;
+
+            pdf.setFontSize(10);
             pdf.setFont(undefined, 'normal');
-            pdf.text('Lanzamiento oficial del Himno del Instituto de Previsión Social', margin, yPos + 6);
 
-            yPos += 18;
+            const lugar = document.getElementById('lugar').value || 'Explanada del Hospital INGAVI';
+            const fecha = document.getElementById('fecha_evento').value ?
+                new Date(document.getElementById('fecha_evento').value).toLocaleDateString('es-ES') : 'A definir';
+            const evento = document.getElementById('evento_especial').value ||
+                'Lanzamiento oficial del Himno del Instituto de Previsión Social';
 
-            // Músicos compactos
+            pdf.text(`Lugar: ${lugar}`, margin, yPos);
+            yPos += 6;
+            pdf.text(`Fecha: ${fecha}`, margin, yPos);
+            yPos += 6;
+            const eventoLines = pdf.splitTextToSize(`Evento: ${evento}`, contentWidth);
+            pdf.text(eventoLines, margin, yPos);
+            yPos += eventoLines.length * 5 + 10;
+
+            // MÚSICOS
             pdf.setTextColor(227, 30, 36);
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.text('MÚSICOS:', margin, yPos);
+            pdf.text('MÚSICOS', margin, yPos);
+
+            yPos += 8;
 
             const activeMusicians = musicians.filter(m => m.quantity > 0);
-
-            if (activeMusicians.length > 0) {
-                pdf.setTextColor(40, 40, 40);
-                pdf.setFontSize(8);
-                pdf.setFont(undefined, 'normal');
-
-                let musicianText = activeMusicians.map(m =>
-                    `${m.name}: ${m.quantity} × ${formatCurrency(m.price)} = ${formatCurrency(m.price * m.quantity)}`
-                ).join('  |  ');
-
-                const lines = pdf.splitTextToSize(musicianText, contentWidth - 5);
-                pdf.text(lines, margin, yPos + 6);
-                yPos += lines.length * 4 + 8;
-            }
-
-            // Servicios incluidos compactos
-            pdf.setTextColor(227, 30, 36);
-            pdf.setFontSize(12);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('SERVICIOS INCLUIDOS:', margin, yPos);
-
-            pdf.setTextColor(40, 167, 69);
-            pdf.setFontSize(8);
+            pdf.setTextColor(40, 40, 40);
+            pdf.setFontSize(9);
             pdf.setFont(undefined, 'normal');
 
-            fixedServices.forEach((s, index) => {
-                pdf.text(`${s.name}: ${formatCurrency(s.price)}`, margin + (index * 80), yPos + 6);
+            activeMusicians.forEach((m) => {
+                pdf.text(`${m.name}: ${m.quantity} × ${formatCurrency(m.price)} = ${formatCurrency(m.price * m.quantity)}`, margin, yPos);
+                yPos += 5;
             });
 
-            yPos += 15;
+            yPos += 5;
 
-            // Resumen compacto
+            // SERVICIOS
+            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('SERVICIOS INCLUIDOS', margin, yPos);
+
+            yPos += 8;
+
+            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(9);
+            pdf.setFont(undefined, 'normal');
+
+            fixedServices.forEach((s) => {
+                pdf.text(`${s.name}: ${formatCurrency(s.price)}`, margin, yPos);
+                yPos += 5;
+            });
+
+            yPos += 10;
+
+            // TOTAL
             const totalMusicians = musicians.reduce((sum, m) => sum + m.quantity, 0);
             const subtotalMusicians = musicians.reduce((sum, m) => sum + (m.price * m.quantity), 0);
             const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0);
             const totalGeneral = subtotalMusicians + subtotalServices;
 
             pdf.setFillColor(227, 30, 36);
-            pdf.roundedRect(margin, yPos, contentWidth, 25, 2, 2, 'F');
+            pdf.rect(margin, yPos, contentWidth, 15, 'F');
 
             pdf.setTextColor(255, 255, 255);
-            pdf.setFontSize(10);
-            pdf.setFont(undefined, 'bold');
-
-            pdf.text(`Total Músicos: ${totalMusicians}`, margin + 5, yPos + 8);
-            pdf.text(`Subtotal Músicos: ${formatCurrency(subtotalMusicians)}`, margin + 5, yPos + 15);
-            pdf.text(`Servicios: ${formatCurrency(subtotalServices)}`, margin + 5, yPos + 22);
-
             pdf.setFontSize(14);
-            pdf.text(`TOTAL GENERAL: ${formatCurrency(totalGeneral)}`, pageWidth - margin - 5, yPos + 15, { align: 'right' });
-
-            yPos += 35;
-
-            // Condiciones comerciales compactas
-            pdf.setTextColor(227, 30, 36);
-            pdf.setFontSize(11);
             pdf.setFont(undefined, 'bold');
-            pdf.text('CONDICIONES COMERCIALES:', margin, yPos);
-
-            pdf.setTextColor(80, 80, 80);
-            pdf.setFontSize(7);
-            pdf.setFont(undefined, 'normal');
-
-            const conditions = [
-                '• Pago: 50% al confirmar fecha/contrato, 50% el día del evento',
-                '• Incluye: Músicos profesionales, dirección musical, 3 ensayos, arreglos Himno IPS',
-                '• No incluye: Audio, transporte instrumentos grandes, alimentación, permisos',
-                '• Duración: 60-75 min concierto + 2-3h montaje  •  Validez: 30 días'
-            ];
-
-            conditions.forEach((cond, index) => {
-                pdf.text(cond, margin, yPos + 8 + (index * 4));
-            });
+            pdf.text(`TOTAL: ${formatCurrency(totalGeneral)}`, pageWidth - margin - 5, yPos + 10, { align: 'right' });
 
             yPos += 25;
 
-            // Detalles técnicos compactos
-            pdf.setTextColor(227, 30, 36);
+            // CONDICIONES
+            pdf.setTextColor(40, 40, 40);
             pdf.setFontSize(10);
             pdf.setFont(undefined, 'bold');
-            pdf.text('DETALLES TÉCNICOS:', margin, yPos);
+            pdf.text('CONDICIONES:', margin, yPos);
 
-            pdf.setTextColor(60, 60, 60);
-            pdf.setFontSize(7);
+            yPos += 8;
+
+            pdf.setFontSize(8);
             pdf.setFont(undefined, 'normal');
 
-            const technical = [
-                '🎵 Orquesta sinfónica completa • Arreglos originales • Dirección profesional',
-                '🎚️ Sistema sonido profesional • Iluminación escénica • Micrófonos inalámbricos',
-                '🚛 Transporte instrumentos • Personal montaje • 2-3 horas setup'
+            const conditions = [
+                '• Pago: 50% anticipo + 50% día del evento',
+                '• Incluye: Músicos, dirección, ensayos, arreglos',
+                '• No incluye: Audio, transporte, permisos',
+                '• Duración: 60-75 min concierto + montaje'
             ];
 
-            technical.forEach((tech, index) => {
-                pdf.text(tech, margin, yPos + 8 + (index * 4));
+            conditions.forEach((cond) => {
+                pdf.text(cond, margin, yPos);
+                yPos += 4;
             });
 
-            // Footer compacto
-            pdf.setFontSize(7);
-            pdf.setTextColor(150, 150, 150);
-            pdf.text(`Generado: ${new Date().toLocaleDateString('es-PY')} • LIVE CÁMARA - Orquesta Profesional © 2025`, margin, pageHeight - 10);
+            // CONTACTO
+            yPos += 10;
+            pdf.setFontSize(8);
+            pdf.setTextColor(100, 100, 100);
+            pdf.text('Julio Franco - Director General • 0981 574 711 • jucfra23@gmail.com', pageWidth / 2, yPos, { align: 'center' });
+            pdf.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPos + 5, { align: 'center' });
 
-            pdf.save('Presupuesto_LiveCamara_Compacto.pdf');
+            pdf.save('Presupuesto_LiveCamara.pdf');
 
             button.textContent = '📄 Descargar PDF';
             button.disabled = false;
