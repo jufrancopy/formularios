@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto - Live Cámara</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e31e24 0%, #c41e3a 100%);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .event-details {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e31e24;
+        }
+
+        .event-details h2 {
+            color: #e31e24;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .event-details .form-label {
+            color: #c41e3a;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .event-details .form-control {
+            border: 2px solid #e31e24;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            width: 100%;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-sizing: border-box;
+        }
+
+        .event-details .form-control:focus {
+            border-color: #c41e3a;
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+            background-color: white;
+        }
+
+        .event-details .form-control[type="date"] {
+            cursor: pointer;
+        }
+
+        .event-details .form-control::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .event-details .mb-3 {
+            margin-bottom: 20px !important;
+        }
+
+        .event-details .input-group {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .section {
+            margin: 30px 0;
+        }
+
+        .section-title {
+            color: #e31e24;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e31e24;
+        }
+
+        .musician-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-left: 4px solid #e31e24;
+        }
+
+        .musician-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .musician-info {
+            flex: 1;
+        }
+
+        .musician-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #c41e3a;
+            margin-bottom: 5px;
+        }
+
+        .musician-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            background: #e31e24;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #c41e3a;
+            transform: scale(1.1);
+        }
+
+        .quantity-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .quantity-display {
+            font-size: 1.3em;
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+            color: #e31e24;
+        }
+
+        .price {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #28a745;
+            min-width: 150px;
+            text-align: right;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-top: 4px solid #e31e24;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .summary-row.total {
+            font-size: 1.8em;
+            font-weight: 700;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255,255,255,0.3);
+            margin-top: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+            border: 2px solid #e31e24;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(227, 30, 36, 0.4);
+            border-color: #c41e3a;
+        }
+
+        .conditions {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .conditions h3 {
+            color: #e31e24;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .conditions ul {
+            list-style-position: inside;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .conditions li {
+            margin: 8px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .actions {
+                display: none;
+            }
+            .quantity-btn {
+                display: none;
+            }
+        }
+
+        .fixed-item {
+            opacity: 0.9;
+        }
+
+        .fixed-label {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .custom-label {
+            display: inline-block;
+            background: #e31e24;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .custom-musician-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-radius: 15px;
+            border: 2px dashed #e31e24;
+        }
+
+        .custom-musician-section h3 {
+            color: #c41e3a;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group label {
+            display: block;
+            color: #c41e3a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e31e24;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .btn-add {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #e31e24 0%, #c41e3a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(227, 30, 36, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="presupuesto">
+        <div class="header">
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <img src="logo_lc.png" alt="Logo Julio Franco" style="width: 300px; height: auto;">
+            </div>
+            <div class="contact-info">
+                <p><strong>Director General:</strong> Julio Franco</p>
+                <p><strong>Teléfono:</strong> 0981 574 711</p>
+                <p><strong>Email:</strong> jucfra23@gmail.com</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="event-details">
+                <h2>Concierto de Villancicos</h2>
+                <div class="mb-3">
+                    <label for="lugar" class="form-label"><strong>Lugar:</strong></label>
+                    <input type="text" class="form-control" id="lugar" name="lugar" value="Explanada del Hospital INGAVI">
+                </div>
+                <div class="mb-3">
+                    <label for="fecha_evento" class="form-label"><strong>Fecha:</strong></label>
+                    <input type="date" class="form-control" id="fecha_evento" name="fecha_evento">
+                </div>
+                <div class="mb-3">
+                    <label for="evento_especial" class="form-label"><strong>Evento Especial:</strong></label>
+                    <textarea class="form-control" id="evento_especial" name="evento_especial" rows="2">Lanzamiento oficial del Himno del Instituto de Previsión Social</textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Configuración de Músicos</h2>
+                <p style="color: #666; margin-bottom: 20px;">Ajuste la cantidad de músicos según sus necesidades:</p>
+                
+                <div id="musicians-list"></div>
+                
+                <div class="custom-musician-section">
+                    <h3>➕ Agregar Músico Personalizado</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Instrumento/Voz:</label>
+                            <input type="text" id="custom-name" placeholder="Ej: Piano, Voz Contralto, Saxofón...">
+                        </div>
+                        <div class="form-group">
+                            <label>Precio (Gs.):</label>
+                            <input type="number" id="custom-price" value="500000" min="0" step="50000">
+                        </div>
+                        <div class="form-group">
+                            <label>Cantidad:</label>
+                            <input type="number" id="custom-quantity" placeholder="1" min="1" max="10" value="1">
+                        </div>
+                        <button class="btn-add" onclick="addCustomMusician()">Agregar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Servicios Incluidos</h2>
+                <div id="fixed-services"></div>
+            </div>
+
+            <div class="summary">
+                <h2 style="margin-bottom: 20px;">Resumen del Presupuesto</h2>
+                <div class="summary-row">
+                    <span>Total Músicos:</span>
+                    <span id="total-musicians">0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal Músicos:</span>
+                    <span id="subtotal-musicians">Gs. 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Servicios Incluidos:</span>
+                    <span id="subtotal-services">Gs. 5.500.000</span>
+                </div>
+                <div class="summary-row total">
+                    <span>TOTAL GENERAL:</span>
+                    <span id="total-general">Gs. 0</span>
+                </div>
+            </div>
+
+            <div class="conditions">
+                <h3>Condiciones Comerciales</h3>
+                <ul>
+                    <li><strong>Forma de Pago:</strong> 50% al confirmar fecha y firmar contrato, 50% el día del evento</li>
+                    <li><strong>Incluye:</strong> Músicos profesionales, dirección musical, 3 ensayos generales, arreglos del Himno IPS</li>
+                    <li><strong>No incluye:</strong> Equipo de audio, transporte de instrumentos grandes, alimentación, permisos</li>
+                    <li><strong>Duración:</strong> 60-75 minutos de concierto + 2-3 horas de montaje</li>
+                    <li><strong>Validez:</strong> 30 días desde la emisión</li>
+                </ul>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="downloadPDF()">📄 Descargar PDF</button>
+            </div>
+        </div>
+
+        <footer style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; padding: 30px; margin-top: 30px; border-top: 4px solid #e31e24;">
+            <div style="text-align: center; max-width: 1200px; margin: 0 auto;">
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <img src="logo_lc.png" alt="Logo Julio Franco" style="width: 120px; height: auto; margin-right: 20px;">
+                    <div>
+                        <h4 style="margin-bottom: 5px; color: #e31e24;">Detalles Técnicos - LIVE CÁMARA</h4>
+                        <p style="font-size: 0.9em; opacity: 0.9; margin: 0;">Orquesta Profesional</p>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <h6 style="color: #e31e24; margin-bottom: 8px;">🎵 Especificaciones Musicales</h6>
+                        <p style="font-size: 0.9em; line-height: 1.4;">Orquesta sinfónica completa<br>Arreglos originales para villancicos<br>Dirección musical profesional<br>Tiempo de concierto: 60-75 min</p>
+                    </div>
+                    <div>
+                        <h6 style="color: #e31e24; margin-bottom: 8px;">🎚️ Equipos Técnicos</h6>
+                        <p style="font-size: 0.9em; line-height: 1.4;">Sistema de sonido profesional<br>Iluminación escénica<br>Micrófonos inalámbricos<br>Consola de mezcla digital</p>
+                    </div>
+                    <div>
+                        <h6 style="color: #e31e24; margin-bottom: 8px;">🚛 Logística y Montaje</h6>
+                        <p style="font-size: 0.9em; line-height: 1.4;">Transporte de instrumentos<br>Equipo técnico especializado<br>Personal de montaje<br>2-3 horas de setup</p>
+                    </div>
+                </div>
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <p style="font-size: 0.9em; margin: 5px 0;"><strong>Director General:</strong> Julio Franco • <strong>Tel:</strong> 0981 574 711 • <strong>Email:</strong> jucfra23@gmail.com</p>
+                    <p style="font-size: 0.8em; margin: 5px 0; opacity: 0.8;">LIVE CÁMARA - Orquesta Profesional | Todos los derechos reservados © 2025</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const musicians = [
+            { name: 'Violín', price: 500000, quantity: 3, min: 0, max: 6, isCustom: false },
+            { name: 'Viola', price: 500000, quantity: 1, min: 0, max: 3, isCustom: false },
+            { name: 'Cello', price: 600000, quantity: 2, min: 0, max: 4, isCustom: false },
+            { name: 'Contrabajo', price: 650000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Flauta Traversa', price: 500000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Oboe', price: 550000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Clarinete', price: 500000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Trompeta', price: 500000, quantity: 1, min: 0, max: 3, isCustom: false },
+            { name: 'Fagot', price: 600000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Guitarra', price: 400000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Bajo Eléctrico', price: 450000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Percusión/Batería', price: 500000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Voz Soprano', price: 700000, quantity: 1, min: 0, max: 2, isCustom: false },
+            { name: 'Voz Tenor', price: 700000, quantity: 1, min: 0, max: 2, isCustom: false }
+        ];
+
+        const fixedServices = [
+            { name: 'Dirección General y Arreglos Musicales', price: 2500000 },
+            { name: 'Ensayos Generales (3 sesiones)', price: 1500000 },
+            { name: 'Arreglos Himno IPS', price: 1500000 }
+        ];
+
+        function formatCurrency(amount) {
+            return 'Gs. ' + amount.toLocaleString('es-PY');
+        }
+
+        function renderMusicians() {
+            const container = document.getElementById('musicians-list');
+            container.innerHTML = musicians.map((m, index) => `
+                <div class="musician-item">
+                    <div class="musician-info">
+                        <div class="musician-name">
+                            ${m.name}
+                            ${m.isCustom ? '<span class="custom-label">Personalizado</span>' : ''}
+                        </div>
+                        <div style="color: #666; font-size: 0.95em;">${formatCurrency(m.price)} por músico</div>
+                    </div>
+                    <div class="musician-controls">
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="changeQuantity(${index}, -1)" ${m.quantity <= m.min ? 'disabled' : ''}>−</button>
+                            <span class="quantity-display">${m.quantity}</span>
+                            <button class="quantity-btn" onclick="changeQuantity(${index}, 1)" ${m.quantity >= m.max ? 'disabled' : ''}>+</button>
+                        </div>
+                        <div class="price">${formatCurrency(m.price * m.quantity)}</div>
+                        ${m.isCustom ? `<button class="delete-btn" onclick="deleteMusician(${index})">🗑️ Eliminar</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFixedServices() {
+            const container = document.getElementById('fixed-services');
+            container.innerHTML = fixedServices.map(s => `
+                <div class="musician-item fixed-item">
+                    <div class="musician-info">
+                        <div class="musician-name">${s.name} <span class="fixed-label">Incluido</span></div>
+                    </div>
+                    <div class="price">${formatCurrency(s.price)}</div>
+                </div>
+            `).join('');
+        }
+
+        function changeQuantity(index, delta) {
+            const musician = musicians[index];
+            const newQuantity = musician.quantity + delta;
+            
+            if (newQuantity >= musician.min && newQuantity <= musician.max) {
+                musician.quantity = newQuantity;
+                renderMusicians();
+                updateSummary();
+            }
+        }
+
+        function addCustomMusician() {
+            const name = document.getElementById('custom-name').value.trim();
+            const price = parseInt(document.getElementById('custom-price').value);
+            const quantity = parseInt(document.getElementById('custom-quantity').value);
+
+            if (!name) {
+                alert('Por favor, ingrese el nombre del instrumento o voz');
+                return;
+            }
+
+            if (!price || price <= 0) {
+                alert('Por favor, ingrese un precio válido');
+                return;
+            }
+
+            if (!quantity || quantity <= 0) {
+                alert('Por favor, ingrese una cantidad válida');
+                return;
+            }
+
+            musicians.push({
+                name: name,
+                price: price,
+                quantity: quantity,
+                min: 0,
+                max: 20,
+                isCustom: true
+            });
+
+            document.getElementById('custom-name').value = '';
+            document.getElementById('custom-price').value = '';
+            document.getElementById('custom-quantity').value = '1';
+
+            renderMusicians();
+            updateSummary();
+        }
+
+        function deleteMusician(index) {
+            if (confirm('¿Está seguro de eliminar este músico?')) {
+                musicians.splice(index, 1);
+                renderMusicians();
+                updateSummary();
+            }
+        }
+
+        function updateSummary() {
+            const totalMusicians = musicians.reduce((sum, m) => sum + m.quantity, 0);
+            const subtotalMusicians = musicians.reduce((sum, m) => sum + (m.price * m.quantity), 0);
+            const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0);
+            const totalGeneral = subtotalMusicians + subtotalServices;
+
+            document.getElementById('total-musicians').textContent = totalMusicians;
+            document.getElementById('subtotal-musicians').textContent = formatCurrency(subtotalMusicians);
+            document.getElementById('subtotal-services').textContent = formatCurrency(subtotalServices);
+            document.getElementById('total-general').textContent = formatCurrency(totalGeneral);
+        }
+
+        function downloadPDF() {
+            const button = event.target;
+            button.textContent = 'Generando PDF...';
+            button.disabled = true;
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const margin = 20;
+            const contentWidth = pageWidth - (margin * 2);
+            let yPos = margin;
+
+            // Header compacto con logo
+            pdf.setFillColor(227, 30, 36);
+            pdf.rect(0, 0, pageWidth, 35, 'F');
+
+            // Agregar logo pequeño al PDF (si existe la imagen)
+            try {
+                const img = new Image();
+                img.src = 'logo_lc.png';
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    const imgData = canvas.toDataURL('image/png');
+
+                    // Logo pequeño en el header
+                    pdf.addImage(imgData, 'PNG', margin, 5, 25, 25);
+
+                    pdf.setTextColor(255, 255, 255);
+                    pdf.setFontSize(24);
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text('LIVE CÁMARA', margin + 35, 18);
+
+                    pdf.setFontSize(10);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text('Orquesta Profesional • Julio Franco | 0981 574 711 | jucfra23@gmail.com', margin + 35, 28);
+                };
+            } catch (e) {
+                // Si no se puede cargar el logo, continuar sin él
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(24);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('LIVE CÁMARA', margin, 18);
+
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'normal');
+                pdf.text('Orquesta Profesional • Julio Franco | 0981 574 711 | jucfra23@gmail.com', margin, 28);
+            }
+
+            yPos = 45;
+
+            // Detalles del evento compactos
+            pdf.setTextColor(227, 30, 36);
+            pdf.setFontSize(14);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Concierto de Villancicos - Explanada Hospital INGAVI', margin, yPos);
+
+            pdf.setTextColor(100, 100, 100);
+            pdf.setFontSize(9);
+            pdf.setFont(undefined, 'normal');
+            pdf.text('Lanzamiento oficial del Himno del Instituto de Previsión Social', margin, yPos + 6);
+
+            yPos += 18;
+
+            // Músicos compactos
+            pdf.setTextColor(227, 30, 36);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('MÚSICOS:', margin, yPos);
+
+            const activeMusicians = musicians.filter(m => m.quantity > 0);
+
+            if (activeMusicians.length > 0) {
+                pdf.setTextColor(40, 40, 40);
+                pdf.setFontSize(8);
+                pdf.setFont(undefined, 'normal');
+
+                let musicianText = activeMusicians.map(m =>
+                    `${m.name}: ${m.quantity} × ${formatCurrency(m.price)} = ${formatCurrency(m.price * m.quantity)}`
+                ).join('  |  ');
+
+                const lines = pdf.splitTextToSize(musicianText, contentWidth - 5);
+                pdf.text(lines, margin, yPos + 6);
+                yPos += lines.length * 4 + 8;
+            }
+
+            // Servicios incluidos compactos
+            pdf.setTextColor(227, 30, 36);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('SERVICIOS INCLUIDOS:', margin, yPos);
+
+            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+
+            fixedServices.forEach((s, index) => {
+                pdf.text(`${s.name}: ${formatCurrency(s.price)}`, margin + (index * 80), yPos + 6);
+            });
+
+            yPos += 15;
+
+            // Resumen compacto
+            const totalMusicians = musicians.reduce((sum, m) => sum + m.quantity, 0);
+            const subtotalMusicians = musicians.reduce((sum, m) => sum + (m.price * m.quantity), 0);
+            const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0);
+            const totalGeneral = subtotalMusicians + subtotalServices;
+
+            pdf.setFillColor(227, 30, 36);
+            pdf.roundedRect(margin, yPos, contentWidth, 25, 2, 2, 'F');
+
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'bold');
+
+            pdf.text(`Total Músicos: ${totalMusicians}`, margin + 5, yPos + 8);
+            pdf.text(`Subtotal Músicos: ${formatCurrency(subtotalMusicians)}`, margin + 5, yPos + 15);
+            pdf.text(`Servicios: ${formatCurrency(subtotalServices)}`, margin + 5, yPos + 22);
+
+            pdf.setFontSize(14);
+            pdf.text(`TOTAL GENERAL: ${formatCurrency(totalGeneral)}`, pageWidth - margin - 5, yPos + 15, { align: 'right' });
+
+            yPos += 35;
+
+            // Condiciones comerciales compactas
+            pdf.setTextColor(227, 30, 36);
+            pdf.setFontSize(11);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('CONDICIONES COMERCIALES:', margin, yPos);
+
+            pdf.setTextColor(80, 80, 80);
+            pdf.setFontSize(7);
+            pdf.setFont(undefined, 'normal');
+
+            const conditions = [
+                '• Pago: 50% al confirmar fecha/contrato, 50% el día del evento',
+                '• Incluye: Músicos profesionales, dirección musical, 3 ensayos, arreglos Himno IPS',
+                '• No incluye: Audio, transporte instrumentos grandes, alimentación, permisos',
+                '• Duración: 60-75 min concierto + 2-3h montaje  •  Validez: 30 días'
+            ];
+
+            conditions.forEach((cond, index) => {
+                pdf.text(cond, margin, yPos + 8 + (index * 4));
+            });
+
+            yPos += 25;
+
+            // Detalles técnicos compactos
+            pdf.setTextColor(227, 30, 36);
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('DETALLES TÉCNICOS:', margin, yPos);
+
+            pdf.setTextColor(60, 60, 60);
+            pdf.setFontSize(7);
+            pdf.setFont(undefined, 'normal');
+
+            const technical = [
+                '🎵 Orquesta sinfónica completa • Arreglos originales • Dirección profesional',
+                '🎚️ Sistema sonido profesional • Iluminación escénica • Micrófonos inalámbricos',
+                '🚛 Transporte instrumentos • Personal montaje • 2-3 horas setup'
+            ];
+
+            technical.forEach((tech, index) => {
+                pdf.text(tech, margin, yPos + 8 + (index * 4));
+            });
+
+            // Footer compacto
+            pdf.setFontSize(7);
+            pdf.setTextColor(150, 150, 150);
+            pdf.text(`Generado: ${new Date().toLocaleDateString('es-PY')} • LIVE CÁMARA - Orquesta Profesional © 2025`, margin, pageHeight - 10);
+
+            pdf.save('Presupuesto_LiveCamara_Compacto.pdf');
+
+            button.textContent = '📄 Descargar PDF';
+            button.disabled = false;
+        }
+
+        renderMusicians();
+        renderFixedServices();
+        updateSummary();
+    </script>
+</body>
+</html>

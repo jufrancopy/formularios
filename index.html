@@ -441,6 +441,32 @@
                 </a>
             </div>
 
+            <!-- Nuevo card: Presupuesto de Orquesta -->
+            <div class="col-lg-4 col-md-6" data-categories="presupuesto">
+                <div class="card card-formulario">
+                    <img src="logo_lc.png" class="card-img-top" alt="Presupuesto Orquesta">
+                    <div class="card-body">
+                        <h5 class="card-title">Presupuesto de Orquesta 2025</h5>
+                        <p class="card-text">Formulario para presupuesto musical y orquestal de LIVE CÁMARA, incluyendo configuración de músicos y servicios.</p>
+                        <div class="mb-3">
+                            <span class="badge badge-categoria">Música</span>
+                            <span class="badge badge-categoria">Presupuesto</span>
+                        </div>
+                        <a href="presupuesto_2025.html" class="btn btn-primary-custom text-white">Ver formulario</a>
+                        <div class="rating-container">
+                            <div class="rating-stars">
+                                <i class="fas fa-star" data-rating="1"></i>
+                                <i class="fas fa-star" data-rating="2"></i>
+                                <i class="fas fa-star" data-rating="3"></i>
+                                <i class="fas fa-star" data-rating="4"></i>
+                                <i class="fas fa-star" data-rating="5"></i>
+                            </div>
+                            <div class="rating-count" id="ratingCount-presupuesto">(0 votos)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -649,6 +675,10 @@
         for (let i = 1; i <= 6; i++) {
             updateRatingDisplay(i);
         }
+        updateRatingDisplay('categorizacion');
+        updateRatingDisplay('patrimonio');
+        updateRatingDisplay('previbus-reportes');
+        updateRatingDisplay('presupuesto');
 
         // Filtro por categorías
         document.querySelectorAll('.category-btn').forEach(btn => {
