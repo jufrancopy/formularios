@@ -6,6 +6,8 @@
     <title>Presupuesto - Live Cámara</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -148,21 +150,38 @@
             border-bottom: 3px solid #e31e24;
         }
 
-        .musician-item {
-            background: #f8f9fa;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
+        .musician-item, .service-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 18px 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .musician-item {
             border-left: 4px solid #e31e24;
         }
 
-        .musician-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .service-item {
+            border-left: 4px solid #1976d2;
+        }
+
+        .musician-item:hover, .service-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .musician-controls, .service-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 200px;
+            justify-content: flex-end;
         }
 
         .musician-info {
@@ -283,6 +302,19 @@
             border-color: #c41e3a;
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+            border: 2px solid #0D47A1;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+            border-color: #1565C0;
+        }
+
         .conditions {
             background: #f8f9fa;
             padding: 25px;
@@ -317,56 +349,90 @@
                 font-size: 1.8em;
             }
 
-            .musician-item {
-                display: block !important;
-                padding: 12px;
-                margin: 8px 0;
-                position: relative;
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
             }
 
-            .musician-info {
-                margin-bottom: 8px;
+            .actions .btn {
+                width: 100%;
+                max-width: 300px;
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .musician-item, .service-item {
+                display: block !important;
+                padding: 15px;
+                margin: 10px 0;
+                position: relative;
+                border-radius: 10px;
+                border: 1px solid #e0e0e0;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .musician-item {
+                border-left: 4px solid #e31e24;
+            }
+
+            .service-item {
+                border-left: 4px solid #1976d2;
+            }
+
+            .musician-info, .service-info {
+                margin-bottom: 12px;
                 width: 100%;
             }
 
-            .musician-name {
+            .musician-name, .service-name {
                 font-size: 1.1em;
-                margin-bottom: 2px;
+                margin-bottom: 4px;
                 display: block;
+                font-weight: 600;
             }
 
-            .musician-info div:last-child {
+            .musician-info div:last-child, .service-info div:last-child {
                 font-size: 0.9em;
                 color: #666;
+                margin-top: 2px;
             }
 
-            .musician-controls {
+            .musician-controls, .service-controls {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
-                margin-top: 10px;
-                padding-top: 8px;
+                margin-top: 12px;
+                padding-top: 10px;
                 border-top: 1px solid #eee;
+                min-width: auto !important;
+                flex-direction: row;
+                gap: 10px;
             }
 
             .quantity-control {
                 display: flex;
                 align-items: center;
                 gap: 8px;
+                flex-shrink: 0;
             }
 
             .quantity-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 1em;
+                width: 32px;
+                height: 32px;
+                font-size: 1.1em;
+                border-radius: 50%;
+                flex-shrink: 0;
             }
 
             .quantity-display {
-                font-size: 1.1em;
-                min-width: 25px;
+                font-size: 1.2em;
+                min-width: 30px;
                 text-align: center;
                 font-weight: 600;
+                color: #e31e24;
+                flex-shrink: 0;
             }
 
             .price {
@@ -377,14 +443,42 @@
                 text-align: right;
                 flex-shrink: 0;
                 margin-left: auto;
-                padding-left: 10px;
+                background: rgba(40, 167, 69, 0.1);
+                padding: 4px 8px;
+                border-radius: 6px;
             }
 
             .delete-btn {
-                font-size: 0.8em;
-                padding: 4px 8px;
+                font-size: 0.9em;
+                padding: 6px 10px;
                 margin-left: 8px;
                 flex-shrink: 0;
+                border-radius: 6px;
+            }
+
+            /* Service item specific mobile styles */
+            .service-item .service-controls {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .service-item input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
+                flex-shrink: 0;
+            }
+
+            /* Center quantity controls for Ensayos in mobile */
+            .ensayos-item .quantity-control {
+                justify-content: center;
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            .ensayos-item .service-controls {
+                flex-direction: column;
+                align-items: center;
             }
 
             .summary {
@@ -669,6 +763,21 @@
             transform: translateY(-2px);
             box-shadow: 0 3px 10px rgba(227, 30, 36, 0.4);
         }
+
+        /* Services section styling - similar to custom musician section but with different colors */
+        .services-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            border: 2px dashed #1976d2;
+        }
+
+        .services-section p {
+            color: #1565c0;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -711,12 +820,35 @@
                     <h3>➕ Agregar Músico Personalizado</h3>
                     <div class="custom-form-container">
                         <div class="custom-form-group">
-                            <label>Instrumento/Voz:</label>
-                            <input type="text" id="custom-name" placeholder="Ej: Piano, Voz Contralto..." class="custom-input">
+                            <label>Seleccionar Instrumento/Voz:</label>
+                            <select id="custom-name-select" class="custom-input" onchange="updateCustomName()">
+                                <option value="">Seleccionar de lista...</option>
+                                <option value="Piano">Piano</option>
+                                <option value="Órgano">Órgano</option>
+                                <option value="Arpa">Arpa</option>
+                                <option value="Saxofón Soprano">Saxofón Soprano</option>
+                                <option value="Saxofón Alto">Saxofón Alto</option>
+                                <option value="Saxofón Tenor">Saxofón Tenor</option>
+                                <option value="Trombón">Trombón</option>
+                                <option value="Tuba">Tuba</option>
+                                <option value="Corno Francés">Corno Francés</option>
+                                <option value="Voz Contralto">Voz Contralto</option>
+                                <option value="Voz Barítono">Voz Barítono</option>
+                                <option value="Voz Bajo">Voz Bajo</option>
+                                <option value="Voz Mezzo Soprano">Voz Mezzo Soprano</option>
+                                <option value="Percusión Adicional">Percusión Adicional</option>
+                                <option value="Sintetizador">Sintetizador</option>
+                                <option value="Teclado">Teclado</option>
+                                <option value="Otro">Otro (especificar abajo)</option>
+                            </select>
+                        </div>
+                        <div class="custom-form-group">
+                            <label>Instrumento/Voz Personalizado:</label>
+                            <input type="text" id="custom-name" placeholder="Especificar si 'Otro'..." class="custom-input" disabled>
                         </div>
                         <div class="custom-form-group">
                             <label>Precio (Gs.):</label>
-                            <input type="text" id="custom-price" value="500.000" class="custom-input" oninput="formatPrice(this)">
+                            <input type="text" id="custom-price" value="500.000" class="custom-input" readonly>
                         </div>
                         <div class="custom-form-group">
                             <label>Cantidad:</label>
@@ -729,7 +861,61 @@
 
             <div class="section">
                 <h2 class="section-title">Servicios Incluidos</h2>
-                <div id="fixed-services"></div>
+                <div class="services-section">
+                    <h3>➕ Agregar Servicios Personalizados</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Seleccione los servicios adicionales que desea incluir:</p>
+
+                    <!-- Dirección General (siempre incluido) -->
+                    <div class="service-item">
+                        <div class="service-info">
+                            <div class="service-name">Dirección General y Arreglos Musicales <span class="fixed-label">Obligatorio</span></div>
+                            <div style="color: #666; font-size: 0.95em;">Gs. 2.500.000 (incluido)</div>
+                        </div>
+                        <div class="service-controls">
+                            <div class="price">Gs. 2.500.000</div>
+                        </div>
+                    </div>
+
+                    <!-- Ensayos -->
+                    <div class="service-item ensayos-item">
+                        <div class="service-info">
+                            <div class="service-name">Ensayos Generales</div>
+                            <div style="color: #666; font-size: 0.95em;">Gs. 500.000 por sesión</div>
+                        </div>
+                        <div class="service-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="changeEnsayos(-1)">−</button>
+                                <span class="quantity-display" id="ensayos-quantity">1</span>
+                                <button class="quantity-btn" onclick="changeEnsayos(1)">+</button>
+                            </div>
+                            <div class="price" id="ensayos-price">Gs. 500.000</div>
+                        </div>
+                    </div>
+
+                    <!-- Arreglos personalizados -->
+                    <div class="service-item">
+                        <div class="service-info">
+                            <div class="service-name">Arreglos Personalizados</div>
+                            <div style="color: #666; font-size: 0.95em;">Gs. 500.000</div>
+                        </div>
+                        <div class="service-controls">
+                            <input type="checkbox" id="arreglos-checkbox" onchange="toggleArreglos()">
+                            <div class="price" id="arreglos-price" style="display: none;">Gs. 500.000</div>
+                        </div>
+                    </div>
+
+                    <!-- Equipos de Audio -->
+                    <div class="service-item">
+                        <div class="service-info">
+                            <div class="service-name">Equipos de Audio</div>
+                            <div style="color: #666; font-size: 0.95em;">Gs. 2.500.000</div>
+                        </div>
+                        <div class="service-controls">
+                            <input type="checkbox" id="audio-checkbox" onchange="toggleAudio()">
+                            <div class="price" id="audio-price" style="display: none;">Gs. 2.500.000</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="summary">
@@ -764,7 +950,7 @@
             </div>
 
             <div class="actions">
-                <button class="btn btn-primary" onclick="downloadPDF()">📄 Descargar PDF</button>
+                <button class="btn btn-success" onclick="downloadCombined()">📋 Descargar Presupuesto y Contrato</button>
             </div>
         </div>
 
@@ -817,10 +1003,19 @@
             { name: 'Voz Tenor', price: 500000, quantity: 1, min: 0, max: 2, isCustom: false }
         ];
 
+        // Services configuration
+        let ensayosQuantity = 1;
+        let arreglosEnabled = false;
+        let audioEnabled = false;
+
         const fixedServices = [
-            { name: 'Dirección General y Arreglos Musicales', price: 2500000 },
-            { name: 'Ensayos Generales (3 sesiones)', price: 1500000 },
-            { name: 'Arreglos Himno IPS', price: 1500000 }
+            { name: 'Dirección General y Arreglos Musicales', price: 2500000, alwaysIncluded: true }
+        ];
+
+        const dynamicServices = [
+            { name: 'Ensayos Generales', pricePerUnit: 500000, quantity: 1, min: 1, max: 10, enabled: true },
+            { name: 'Arreglos Personalizados', price: 500000, enabled: false },
+            { name: 'Equipos de Audio', price: 2500000, enabled: false }
         ];
 
         function formatCurrency(amount) {
@@ -864,15 +1059,9 @@
         }
 
         function renderFixedServices() {
-            const container = document.getElementById('fixed-services');
-            container.innerHTML = fixedServices.map(s => `
-                <div class="musician-item fixed-item">
-                    <div class="musician-info">
-                        <div class="musician-name">${s.name} <span class="fixed-label">Incluido</span></div>
-                    </div>
-                    <div class="price">${formatCurrency(s.price)}</div>
-                </div>
-            `).join('');
+            // This function is no longer needed as fixed services are rendered directly in HTML
+            // Keeping it for compatibility but making it a no-op
+            return;
         }
 
         function changeQuantity(index, delta) {
@@ -892,17 +1081,29 @@
             const quantity = parseInt(document.getElementById('custom-quantity').value);
 
             if (!name) {
-                alert('Por favor, ingrese el nombre del instrumento o voz');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor, ingrese el nombre del instrumento o voz'
+                });
                 return;
             }
 
             if (!price || price <= 0) {
-                alert('Por favor, ingrese un precio válido');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor, ingrese un precio válido'
+                });
                 return;
             }
 
             if (!quantity || quantity <= 0) {
-                alert('Por favor, ingrese una cantidad válida');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor, ingrese una cantidad válida'
+                });
                 return;
             }
 
@@ -924,17 +1125,78 @@
         }
 
         function deleteMusician(index) {
-            if (confirm('¿Está seguro de eliminar este músico?')) {
-                musicians.splice(index, 1);
-                renderMusicians();
+            Swal.fire({
+                title: '¿Está seguro?',
+                text: '¿Está seguro de eliminar este músico?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    musicians.splice(index, 1);
+                    renderMusicians();
+                    updateSummary();
+                }
+            });
+        }
+
+        // Dynamic services functions
+        function changeEnsayos(delta) {
+            const newQuantity = ensayosQuantity + delta;
+            if (newQuantity >= 1 && newQuantity <= 10) {
+                ensayosQuantity = newQuantity;
+                document.getElementById('ensayos-quantity').textContent = ensayosQuantity;
+                document.getElementById('ensayos-price').textContent = formatCurrency(ensayosQuantity * 500000);
                 updateSummary();
+            }
+        }
+
+        function toggleArreglos() {
+            arreglosEnabled = document.getElementById('arreglos-checkbox').checked;
+            const priceElement = document.getElementById('arreglos-price');
+            priceElement.style.display = arreglosEnabled ? 'block' : 'none';
+            updateSummary();
+        }
+
+        function toggleAudio() {
+            audioEnabled = document.getElementById('audio-checkbox').checked;
+            const priceElement = document.getElementById('audio-price');
+            priceElement.style.display = audioEnabled ? 'block' : 'none';
+            updateSummary();
+        }
+
+        // Custom musician functions
+        function updateCustomName() {
+            const selectElement = document.getElementById('custom-name-select');
+            const customNameInput = document.getElementById('custom-name');
+            const selectedValue = selectElement.value;
+
+            if (selectedValue === 'Otro') {
+                customNameInput.disabled = false;
+                customNameInput.placeholder = 'Especificar instrumento o voz...';
+                customNameInput.value = '';
+            } else if (selectedValue) {
+                customNameInput.disabled = true;
+                customNameInput.value = selectedValue;
+            } else {
+                customNameInput.disabled = true;
+                customNameInput.value = '';
             }
         }
 
         function updateSummary() {
             const totalMusicians = musicians.reduce((sum, m) => sum + m.quantity, 0);
             const subtotalMusicians = musicians.reduce((sum, m) => sum + (m.price * m.quantity), 0);
-            const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0);
+
+            // Calculate dynamic services
+            const ensayosTotal = ensayosQuantity * 500000;
+            const arreglosTotal = arreglosEnabled ? 500000 : 0;
+            const audioTotal = audioEnabled ? 2500000 : 0;
+
+            const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0) + ensayosTotal + arreglosTotal + audioTotal;
             const totalGeneral = subtotalMusicians + subtotalServices;
 
             document.getElementById('total-musicians').textContent = totalMusicians;
@@ -957,33 +1219,18 @@
             const contentWidth = pageWidth - (margin * 2);
             let yPos = margin;
 
-            // HEADER SIMPLE Y PROFESIONAL
+            // HEADER DEL ANEXO
             pdf.setFillColor(227, 30, 36);
             pdf.rect(0, 0, pageWidth, 40, 'F');
 
             pdf.setTextColor(255, 255, 255);
             pdf.setFontSize(20);
             pdf.setFont(undefined, 'bold');
-            pdf.text('PRESUPUESTO MUSICAL', pageWidth / 2, 20, { align: 'center' });
+            pdf.text('ANEXO: PRESUPUESTO DETALLADO', pageWidth / 2, 20, { align: 'center' });
 
             pdf.setFontSize(10);
             pdf.setFont(undefined, 'normal');
             pdf.text('LIVE CÁMARA - Orquesta Profesional', pageWidth / 2, 30, { align: 'center' });
-
-            // Logo pequeño en esquina
-            try {
-                const img = new Image();
-                img.src = 'logo_lc.png';
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                const imgData = canvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'PNG', pageWidth - 50, 5, 30, 30);
-            } catch (e) {
-                // Logo no disponible, continuar sin él
-            }
 
             yPos = 50;
 
@@ -1016,7 +1263,7 @@
             pdf.setTextColor(227, 30, 36);
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.text('MÚSICOS', margin, yPos);
+            pdf.text('MÚSICOS CONTRATADOS', margin, yPos);
 
             yPos += 8;
 
@@ -1049,14 +1296,452 @@
                 yPos += 5;
             });
 
+// Agregar servicios dinámicos
+if (ensayosQuantity > 1) {
+    pdf.text(`Ensayos Generales: ${ensayosQuantity} × ${formatCurrency(500000)} = ${formatCurrency(ensayosQuantity * 500000)}`, margin, yPos);
+    yPos += 5;
+}
+if (arreglosEnabled) {
+    pdf.text(`Arreglos Personalizados: ${formatCurrency(500000)}`, margin, yPos);
+    yPos += 5;
+}
+if (audioEnabled) {
+    pdf.text(`Equipos de Audio: ${formatCurrency(2500000)}`, margin, yPos);
+    yPos += 5;
+}
+
+
+            // CONDICIONES
+            pdf.setTextColor(40, 40, 40);
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('CONDICIONES:', margin, yPos);
+
+            yPos += 8;
+
+            pdf.setFontSize(8);
+            pdf.setFont(undefined, 'normal');
+
+            const conditions = [
+                '• Pago: 50% anticipo + 50% día del evento',
+                '• Incluye: Músicos, dirección, ensayos, arreglos',
+                '• No incluye: Audio, transporte, permisos',
+                '• Duración: 60-75 min concierto + montaje'
+            ];
+
+            conditions.forEach((cond) => {
+                pdf.text(cond, margin, yPos);
+                yPos += 4;
+            });
+
+            // CONTACTO
+            yPos += 10;
+            pdf.setFontSize(8);
+            pdf.setTextColor(100, 100, 100);
+            pdf.text('Julio Franco - Director General • 0981 574 711 • jucfra23@gmail.com', pageWidth / 2, yPos, { align: 'center' });
+            pdf.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPos + 5, { align: 'center' });
+
+            pdf.save('Presupuesto_LiveCamara.pdf');
+
+            button.textContent = '📄 Descargar PDF';
+            button.disabled = false;
+        }
+
+        async function downloadCombined() {
+            const button = event.target;
+            button.textContent = 'Generando Contrato...';
+            button.disabled = true;
+
+            // Usar SweetAlert2 para inputs
+            const contractorNameResult = await Swal.fire({
+                title: '📋 DATOS DEL CONTRATANTE',
+                input: 'text',
+                inputLabel: 'Nombre del Contratante (Ej: Empresa XYZ S.A.):',
+                inputPlaceholder: 'Ingrese el nombre...',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return 'El nombre del contratante es obligatorio.';
+                    }
+                }
+            });
+
+            if (!contractorNameResult.isConfirmed) {
+                button.textContent = '📋 Descargar Contrato';
+                button.disabled = false;
+                return;
+            }
+
+            const contractorPositionResult = await Swal.fire({
+                title: 'Cargo/Representante Legal',
+                input: 'text',
+                inputLabel: 'Cargo/Representante Legal (Ej: Gerente General):',
+                inputPlaceholder: 'Ingrese el cargo...',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return 'El cargo es obligatorio.';
+                    }
+                }
+            });
+
+            if (!contractorPositionResult.isConfirmed) {
+                button.textContent = '📋 Descargar Contrato';
+                button.disabled = false;
+                return;
+            }
+
+            const contractorIdResult = await Swal.fire({
+                title: 'RUC o Nro de CI',
+                input: 'text',
+                inputLabel: 'RUC o Nro de CI (Ej: 80012345-6 o 1234567):',
+                inputPlaceholder: 'Ingrese RUC o CI...',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return 'El RUC/CI es obligatorio.';
+                    }
+                }
+            });
+
+            if (!contractorIdResult.isConfirmed) {
+                button.textContent = '📋 Descargar Contrato';
+                button.disabled = false;
+                return;
+            }
+
+            const formValues = {
+                contractorName: contractorNameResult.value.trim(),
+                contractorPosition: contractorPositionResult.value.trim(),
+                contractorId: contractorIdResult.value.trim()
+            };
+
+            // Generar PDF con los datos proporcionados
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const margin = 25;
+            const contentWidth = pageWidth - (margin * 2);
+            let yPos = margin;
+
+            // HEADER DEL CONTRATO
+            pdf.setFillColor(227, 30, 36);
+            pdf.rect(0, 0, pageWidth, 50, 'F');
+
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(24);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('CONTRATO DE SERVICIOS MUSICALES', pageWidth / 2, 25, { align: 'center' });
+
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'normal');
+            pdf.text('LIVE CÁMARA - Orquesta Profesional', pageWidth / 2, 35, { align: 'center' });
+
+            pdf.setFontSize(10);
+            pdf.text('Contrato N° ' + Date.now(), pageWidth / 2, 45, { align: 'center' });
+
+            yPos = 70;
+
+            // DATOS DEL CONTRATO
+            pdf.setTextColor(40, 40, 40);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('DATOS DEL CONTRATO', margin, yPos);
+
+            yPos += 15;
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            const lugar = document.getElementById('lugar').value || 'Explanada del Hospital INGAVI';
+            const fecha = document.getElementById('fecha_evento').value ?
+                new Date(document.getElementById('fecha_evento').value).toLocaleDateString('es-ES') : 'A definir';
+            const evento = document.getElementById('evento_especial').value ||
+                'Lanzamiento oficial del Himno del Instituto de Previsión Social';
+
+            const fechaActual = new Date().toLocaleDateString('es-ES');
+
+            pdf.text(`Fecha de celebración del contrato: ${fechaActual}`, margin, yPos);
+            yPos += 8;
+            pdf.text(`Lugar del evento: ${lugar}`, margin, yPos);
+            yPos += 8;
+            pdf.text(`Fecha del evento: ${fecha}`, margin, yPos);
+            yPos += 8;
+            const eventoLines = pdf.splitTextToSize(`Descripción del evento: ${evento}`, contentWidth);
+            pdf.text(eventoLines, margin, yPos);
+            yPos += eventoLines.length * 5 + 10;
+
+            // PARTES CONTRATANTES
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('PARTES CONTRATANTES', margin, yPos);
+            yPos += 15;
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            pdf.text('PRIMERA: LIVE CÁMARA, representada por su Director General JULIO FRANCO,', margin, yPos);
+            yPos += 6;
+            pdf.text('con C.I. N° 3.458.435, domiciliado en Asunción, Paraguay.', margin, yPos);
+            yPos += 10;
+
+            pdf.text(`SEGUNDA: ${formValues.contractorName}, representado por ${formValues.contractorPosition},`, margin, yPos);
+            yPos += 6;
+            pdf.text(`con ${formValues.contractorId.includes('-') ? 'RUC' : 'C.I.'} N° ${formValues.contractorId}, domiciliado en Asunción, Paraguay.`, margin, yPos);
+            yPos += 15;
+
+            // OBJETO DEL CONTRATO
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('OBJETO DEL CONTRATO', margin, yPos);
+            yPos += 15;
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            const objeto = [
+                'Por el presente contrato, la PRIMERA parte se compromete a prestar servicios musicales',
+                'profesionales para el evento descrito, incluyendo:',
+                '',
+                '• Orquesta sinfónica completa con instrumentos y voces',
+                '• Dirección musical profesional',
+                '• Arreglos musicales originales',
+                '• Ensayos previos al evento',
+                '• Montaje y desmontaje técnico'
+            ];
+
+            objeto.forEach(line => {
+                if (line === '') {
+                    yPos += 3;
+                } else {
+                    pdf.text(line, margin, yPos);
+                    yPos += 6;
+                }
+            });
+
+            yPos += 10;
+
+            // PRECIO Y FORMA DE PAGO
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('PRECIO Y FORMA DE PAGO', margin, yPos);
+            yPos += 15;
+
+            const totalMusicians = musicians.reduce((sum, m) => sum + m.quantity, 0);
+            const subtotalMusicians = musicians.reduce((sum, m) => sum + (m.price * m.quantity), 0);
+            const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0) + ensayosQuantity * 500000 + (arreglosEnabled ? 500000 : 0) + (audioEnabled ? 2500000 : 0);
+            const totalGeneral = subtotalMusicians + subtotalServices;
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            pdf.text(`El precio total del contrato asciende a: ${formatCurrency(totalGeneral)}`, margin, yPos);
+            yPos += 8;
+            pdf.text('Forma de pago:', margin, yPos);
+            yPos += 6;
+            pdf.text('• 50% del total al momento de la firma del contrato', margin + 10, yPos);
+            yPos += 6;
+            pdf.text('• 50% restante el día del evento, antes del inicio del mismo', margin + 10, yPos);
+            yPos += 15;
+
+            // OBLIGACIONES DE LAS PARTES
+            if (yPos > 220) {
+                pdf.addPage();
+                yPos = margin;
+            }
+
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('OBLIGACIONES DE LAS PARTES', margin, yPos);
+            yPos += 15;
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            pdf.text('OBLIGACIONES DE LA PRIMERA PARTE (LIVE CÁMARA):', margin, yPos);
+            yPos += 8;
+            pdf.text('• Proporcionar músicos profesionales y calificados', margin + 10, yPos);
+            yPos += 6;
+            pdf.text('• Garantizar la puntualidad y asistencia completa al evento', margin + 10, yPos);
+            yPos += 6;
+            pdf.text('• Mantener el repertorio musical acordado', margin + 10, yPos);
+            yPos += 6;
+            pdf.text('• Proporcionar equipo técnico básico necesario', margin + 10, yPos);
+            yPos += 10;
+
+            pdf.text('OBLIGACIONES DE LA SEGUNDA PARTE (CONTRATANTE):', margin, yPos);
+            yPos += 8;
+            pdf.text('• Proporcionar acceso al lugar del evento con antelación suficiente', margin + 10, yPos);
+            yPos += 6;
+            pdf.text('• Cumplir con los pagos según lo estipulado', margin + 10, yPos);
+            yPos += 6;
+            pdf.text('• Proporcionar alimentación básica para los músicos si el evento excede 4 horas', margin + 10, yPos);
+            yPos += 10;
+
+            // CLÁUSULAS ADICIONALES
+            if (yPos > 200) {
+                pdf.addPage();
+                yPos = margin;
+            }
+
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('CLÁUSULAS ADICIONALES', margin, yPos);
+            yPos += 15;
+
+            pdf.setFontSize(9);
+            pdf.setFont(undefined, 'normal');
+
+            const clausulas = [
+                'PRIMERA: En caso de cancelación por parte del CONTRATANTE con más de 15 días de anticipación,',
+                'se retendrá el 20% del total como gastos administrativos.',
+                '',
+                'SEGUNDA: En caso de cancelación con menos de 15 días de anticipación, se retendrá el 50%',
+                'del total como compensación por gastos incurridos.',
+                '',
+                'TERCERA: En caso de fuerza mayor (clima extremo, desastres naturales, etc.) que impida',
+                'la realización del evento, se reprogramará para la fecha más próxima posible.',
+                '',
+                'CUARTA: La PRIMERA parte no se responsabiliza por fallos técnicos ajenos a su control',
+                '(cortes de energía, fallos en equipos proporcionados por terceros, etc.).',
+                '',
+                'QUINTA: Cualquier modificación al contrato deberá ser realizada por escrito y firmada',
+                'por ambas partes.',
+                '',
+                'SEXTA: Para cualquier controversia derivada de este contrato, las partes se someten',
+                'a la jurisdicción de los tribunales de Asunción, Paraguay.'
+            ];
+
+            clausulas.forEach(line => {
+                if (line === '') {
+                    yPos += 2;
+                } else {
+                    const lineParts = pdf.splitTextToSize(line, contentWidth - 10);
+                    pdf.text(lineParts, margin + 10, yPos);
+                    yPos += lineParts.length * 4;
+                }
+            });
+
+            yPos += 20;
+
+            // FIRMAS
+            if (yPos > 200) {
+                pdf.addPage();
+                yPos = margin;
+            }
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            // Firma primera parte
+            pdf.text('_______________________________', margin, yPos);
+            pdf.text('LIVE CÁMARA', margin + 15, yPos + 5);
+            pdf.text('Julio Franco - Director General', margin + 5, yPos + 10);
+
+            // Firma segunda parte
+            pdf.text('_______________________________', pageWidth - margin - 80, yPos);
+            pdf.text(formValues.contractorName, pageWidth - margin - 65, yPos + 5);
+            pdf.text(formValues.contractorPosition, pageWidth - margin - 60, yPos + 10);
+
+            yPos += 25;
+
+            // Fecha del contrato
+            pdf.text(`Asunción, ${fechaActual}`, pageWidth / 2, yPos, { align: 'center' });
+
+            // Nueva página para el ANEXO: PRESUPUESTO
+            pdf.addPage();
+            yPos = margin;
+
+            // HEADER DEL ANEXO
+            pdf.setFillColor(227, 30, 36);
+            pdf.rect(0, 0, pageWidth, 40, 'F');
+
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(20);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('ANEXO: PRESUPUESTO DETALLADO', pageWidth / 2, 20, { align: 'center' });
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+            pdf.text('LIVE CÁMARA - Orquesta Profesional', pageWidth / 2, 30, { align: 'center' });
+
+            yPos = 50;
+
+            // DATOS DEL EVENTO
+            pdf.setTextColor(40, 40, 40);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('DETALLES DEL EVENTO', margin, yPos);
+
+            yPos += 10;
+
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'normal');
+
+            pdf.text(`Lugar: ${lugar}`, margin, yPos);
+            yPos += 6;
+            pdf.text(`Fecha: ${fecha}`, margin, yPos);
+            yPos += 6;
+            const eventoLines2 = pdf.splitTextToSize(`Evento: ${evento}`, contentWidth);
+            pdf.text(eventoLines2, margin, yPos);
+            yPos += eventoLines2.length * 5 + 10;
+
+            // MÚSICOS
+            pdf.setTextColor(227, 30, 36);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('MÚSICOS CONTRATADOS', margin, yPos);
+
+            yPos += 8;
+
+            const activeMusicians = musicians.filter(m => m.quantity > 0);
+            pdf.setTextColor(40, 40, 40);
+            pdf.setFontSize(9);
+            pdf.setFont(undefined, 'normal');
+
+            activeMusicians.forEach((m) => {
+                pdf.text(`${m.name}: ${m.quantity} × ${formatCurrency(m.price)} = ${formatCurrency(m.price * m.quantity)}`, margin, yPos);
+                yPos += 5;
+            });
+
+            yPos += 5;
+
+            // SERVICIOS
+            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('SERVICIOS INCLUIDOS', margin, yPos);
+
+            yPos += 8;
+
+            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(9);
+            pdf.setFont(undefined, 'normal');
+
+            fixedServices.forEach((s) => {
+                pdf.text(`${s.name}: ${formatCurrency(s.price)}`, margin, yPos);
+                yPos += 5;
+            });
+
+            // Agregar servicios dinámicos
+            if (ensayosQuantity > 1) {
+                pdf.text(`Ensayos Generales: ${ensayosQuantity} × ${formatCurrency(500000)} = ${formatCurrency(ensayosQuantity * 500000)}`, margin, yPos);
+                yPos += 5;
+            }
+            if (arreglosEnabled) {
+                pdf.text(`Arreglos Personalizados: ${formatCurrency(500000)}`, margin, yPos);
+                yPos += 5;
+            }
+            if (audioEnabled) {
+                pdf.text(`Equipos de Audio: ${formatCurrency(2500000)}`, margin, yPos);
+                yPos += 5;
+            }
+
             yPos += 10;
 
             // TOTAL
-            const totalMusicians = musicians.reduce((sum, m) => sum + m.quantity, 0);
-            const subtotalMusicians = musicians.reduce((sum, m) => sum + (m.price * m.quantity), 0);
-            const subtotalServices = fixedServices.reduce((sum, s) => sum + s.price, 0);
-            const totalGeneral = subtotalMusicians + subtotalServices;
-
             pdf.setFillColor(227, 30, 36);
             pdf.rect(margin, yPos, contentWidth, 15, 'F');
 
@@ -1097,10 +1782,27 @@
             pdf.text('Julio Franco - Director General • 0981 574 711 • jucfra23@gmail.com', pageWidth / 2, yPos, { align: 'center' });
             pdf.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPos + 5, { align: 'center' });
 
-            pdf.save('Presupuesto_LiveCamara.pdf');
+            // Agregar numeración de páginas
+            const totalPages = pdf.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFontSize(8);
+                pdf.setTextColor(100, 100, 100);
+                pdf.text(`Página ${i} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+            }
 
-            button.textContent = '📄 Descargar PDF';
+            pdf.save('Presupuesto_Contrato_LiveCamara.pdf');
+
+            button.textContent = '📋 Descargar Presupuesto y Contrato';
             button.disabled = false;
+
+            // Mostrar confirmación con SweetAlert2
+            Swal.fire({
+                icon: 'success',
+                title: '✅ Documento generado exitosamente',
+                text: 'El presupuesto y contrato han sido generados en un solo documento.',
+                confirmButtonText: 'Aceptar'
+            });
         }
 
         renderMusicians();
